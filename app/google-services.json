@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "383252127299",
+    "project_id": "findiefood",
+    "storage_bucket": "findiefood.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383252127299:android:06f4eae0419707ba17fef6",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8HAKkaFrdGqdVwQzgRCe0g7-ELnui0ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
