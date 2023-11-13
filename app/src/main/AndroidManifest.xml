@@ -19,10 +19,7 @@
             android:name=".FirebaseUIActivity"
             android:theme="@style/Theme.AppCompat"
             android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat" />
+
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
