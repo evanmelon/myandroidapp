@@ -2,6 +2,8 @@ package com.example.myapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -9,20 +11,25 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.example.myapplication.databinding.ActivityMapsBinding
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.widget.Button
+import android.widget.EditText
+import android.view.inputmethod.EditorInfo
 import android.content.Intent
+import androidx.core.graphics.blue
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -30,11 +37,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+    private val handler = Handler(Looper.getMainLooper())
+    private val delayMillis = 5000L // 5 seconds delay
+    private val mapUpdateDelayMillis = 500L // 5 seconds delay
+
+
     companion object {
         private const val REQUEST_LOCATION_PERMISSION = 1
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         val message = "Hello, Android!"
         Log.d("MyTag", message)
         binding = ActivityMapsBinding.inflate(layoutInflater)
@@ -47,7 +60,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val intent = Intent(this, FirebaseUIActivity::class.java)
             startActivity(intent)
         }
-
+        val editText = findViewById<EditText>(R.id.editText)
+        editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Handle Enter key press
+                val location = editText.text.toString()
+                // Perform action with the entered location, e.g., search on the map
+                true
+            } else {
+                false
+            }
+        }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -77,7 +100,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
+        var isIdleUpdate: Boolean = false
         mMap = googleMap
+        mMap.setOnCameraMoveStartedListener { reason ->
+            if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                Log.d("location", "CameraMove Started")
+                // User started moving the map, stop location updates for a while
+                stopLocationUpdates()
+                isIdleUpdate = false
+            }
+        }
+        mMap.setOnCameraMoveListener {
+            // Handle camera move event
+            // You can check if the map is actively moving, and decide whether to start or stop location updates
+            Log.d("location", "Map is moving")
+//            stopLocationUpdates()
+        }
+        mMap.setOnCameraIdleListener {
+            Log.d("location", "Camera Idle")
+            // User stopped moving the map, start or restart location updates
+            if (!isIdleUpdate){
+                startLocationUpdates()
+                isIdleUpdate = true
+            }
+
+        }
+        mMap.setOnCameraMoveCanceledListener {
+            Log.d("location", "Camera Move Canceled")
+            startLocationUpdates()
+        }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             // 已经授予定位权限，可以获取用户位置
             // 调用获取位置的方法
@@ -120,17 +171,41 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun startLocationUpdates() {
         val locationRequest = LocationRequest.create()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(500)  // 更新间隔为 0.5 秒
-
+            .setInterval(mapUpdateDelayMillis)  // 更新间隔为 0.5 秒
+        Log.d("location", "start Location update")
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.d("location", "permission checked")
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
         }
     }
 
     private fun updateLocationOnMap(location: Location) {
         val userLatLng = LatLng(location.latitude, location.longitude)
+        val blueMarkerIcon = BitmapDescriptorFactory.fromResource(android.R.drawable.ic_menu_myplaces)
         mMap.clear()
-        mMap.addMarker(MarkerOptions().position(userLatLng).title("Your Location"))
+        mMap.addMarker(
+            MarkerOptions()
+                .position(userLatLng)
+                .title("Your Location")
+                .icon(blueMarkerIcon)
+                .anchor(0.5f, 1.0f)
+        )
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
+    }
+    private fun stopLocationUpdatesForAWhile() {
+        // Stop location updates for a while
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+
+        // Post a delayed task to resume location updates after a delay
+        handler.postDelayed({
+            startLocationUpdates()
+        }, delayMillis)
+    }
+    private fun stopLocationUpdates() {
+        val myRunnable = Runnable {
+            startLocationUpdates()
+        }
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+        handler.removeCallbacks(myRunnable)
     }
 }
