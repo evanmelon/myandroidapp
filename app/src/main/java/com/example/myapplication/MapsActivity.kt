@@ -183,6 +183,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val userLatLng = LatLng(location.latitude, location.longitude)
         val blueMarkerIcon = BitmapDescriptorFactory.fromResource(android.R.drawable.ic_menu_myplaces)
         mMap.clear()
+
         mMap.addMarker(
             MarkerOptions()
                 .position(userLatLng)
