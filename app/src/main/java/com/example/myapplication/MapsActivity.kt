@@ -21,6 +21,8 @@ import com.google.android.gms.location.LocationServices
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
+import android.widget.Button
+import android.content.Intent
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -38,6 +40,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val myButton: Button = findViewById(R.id.myButton)
+
+        myButton.setOnClickListener {
+            // 在这里处理按钮点击事件，例如导航到登入页面
+            val intent = Intent(this, FirebaseUIActivity::class.java)
+            startActivity(intent)
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
