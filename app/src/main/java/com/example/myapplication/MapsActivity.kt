@@ -23,12 +23,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
 
 import android.Manifest
+import android.app.ActivityOptions
 import android.content.pm.PackageManager
 import android.location.Location
 import android.widget.Button
 import android.widget.EditText
 import android.view.inputmethod.EditorInfo
 import android.content.Intent
+import android.transition.Explode
+import android.transition.Fade
+import android.transition.Slide
+import android.view.View
+import android.view.Window
 import androidx.core.graphics.blue
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -45,13 +51,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         private const val REQUEST_LOCATION_PERMISSION = 1
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        with(window) {
+            requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+            // Set an exit transition
+            enterTransition = Fade()
+            exitTransition = Fade()
+
+        }
         supportActionBar?.hide()
         val message = "Hello, Android!"
         Log.d("MyTag", message)
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         val myButton: Button = findViewById(R.id.myButton)
 
@@ -59,6 +74,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // 在这里处理按钮点击事件，例如导航到登入页面
             val intent = Intent(this, FirebaseUIActivity::class.java)
             startActivity(intent)
+        }
+        val homeButton: Button = findViewById(R.id.homeButton)
+        homeButton.setOnClickListener {
+
+            val intent = Intent(this, Home::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+
+//            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
+        }
+        val profileButton: Button = findViewById(R.id.profileButton)
+        profileButton.setOnClickListener {
+            val intent = Intent(this, Profile::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+
+//            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
         }
         val editText = findViewById<EditText>(R.id.editText)
         editText.setOnEditorActionListener { _, actionId, _ ->
@@ -101,11 +131,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         var isIdleUpdate: Boolean = false
+        val myButton: Button = findViewById(R.id.myButton)
+        val editText: EditText = findViewById(R.id.editText)
         mMap = googleMap
         mMap.setOnCameraMoveStartedListener { reason ->
             if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 Log.d("location", "CameraMove Started")
                 // User started moving the map, stop location updates for a while
+                myButton.visibility = View.INVISIBLE
+                editText.visibility = View.INVISIBLE
                 stopLocationUpdates()
                 isIdleUpdate = false
             }
@@ -120,6 +154,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.d("location", "Camera Idle")
             // User stopped moving the map, start or restart location updates
             if (!isIdleUpdate){
+                myButton.visibility = View.VISIBLE
+                editText.visibility = View.VISIBLE
                 startLocationUpdates()
                 isIdleUpdate = true
             }

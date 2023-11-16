@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,5 +9,12 @@
     </style>
 
     <style name="MySuperAppTheme"></style>
+
+    <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">#000000</item>
+        <item name="android:textColorHint">#676767</item>
+        <item name="backgroundTint">#A75338</item>
+        <!-- 其他你想設定的屬性 -->
+    </style>
 
 </resources>
