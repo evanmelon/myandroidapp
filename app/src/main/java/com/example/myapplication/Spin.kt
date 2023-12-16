@@ -20,42 +20,43 @@ class Spin : AppCompatActivity() {
         private lateinit var textLabel: TextView
         override fun onCreate(savedInstanceState: Bundle?) {
                 super.onCreate(savedInstanceState)
+                supportActionBar?.hide()
                 setContentView(R.layout.activity_spin)
-                textLabel = findViewById(R.id.textLabel)
+//                textLabel = findViewById(R.id.textLabel)
                 val turntable: Turntable = findViewById(R.id.turntable)
                 turntable.startTurn("1", 5)
         }
-        fun onSpinButtonClick(view: View) {
-                val rouletteImageView: ImageView = findViewById(R.id.plate)
-                val degrees = Random.nextInt(3600)
-
-                val rotateAnimation = RotateAnimation(
-                        0f,
-                        -degrees.toFloat(),
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f,
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f
-                )
-                rotateAnimation.duration = 3000 // 3 seconds
-                rotateAnimation.fillAfter = true
-
-                rotateAnimation.setAnimationListener(object : Animation.AnimationListener {
-                        override fun onAnimationStart(animation: Animation?) {
-                                // Disable the start button during animation
-                                rouletteImageView.isEnabled = false
-                        }
-                        override fun onAnimationEnd(animation: Animation?) {
-                                // Enable the start button after animation ends
-                                rouletteImageView.isEnabled = true
-                        }
-                        override fun onAnimationRepeat(animation: Animation?) {
-                                // Not used
-                        }
-                })
-
-                rouletteImageView.startAnimation(rotateAnimation)
-                textLabel.startAnimation((rotateAnimation))
-
-        }
+//        fun onSpinButtonClick(view: View) {
+////                val rouletteImageView: ImageView = findViewById(R.id.plate)
+//                val degrees = Random.nextInt(3600)
+//
+//                val rotateAnimation = RotateAnimation(
+//                        0f,
+//                        -degrees.toFloat(),
+//                        Animation.RELATIVE_TO_SELF,
+//                        0.5f,
+//                        Animation.RELATIVE_TO_SELF,
+//                        0.5f
+//                )
+//                rotateAnimation.duration = 3000 // 3 seconds
+//                rotateAnimation.fillAfter = true
+//
+////                rotateAnimation.setAnimationListener(object : Animation.AnimationListener {
+////                        override fun onAnimationStart(animation: Animation?) {
+////                                // Disable the start button during animation
+////                                rouletteImageView.isEnabled = false
+////                        }
+////                        override fun onAnimationEnd(animation: Animation?) {
+////                                // Enable the start button after animation ends
+////                                rouletteImageView.isEnabled = true
+////                        }
+////                        override fun onAnimationRepeat(animation: Animation?) {
+////                                // Not used
+////                        }
+////                })
+//
+////                rouletteImageView.startAnimation(rotateAnimation)
+////                textLabel.startAnimation((rotateAnimation))
+//
+//        }
 }

@@ -16,42 +16,43 @@
         <com.example.myapplication.Turntable
             android:id="@+id/turntable"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"/>
 
-        <ImageView
-            android:id="@+id/plate"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/plate" />
+<!--        <ImageView-->
+<!--            android:id="@+id/plate"-->
+<!--            android:layout_width="300dp"-->
+<!--            android:layout_height="300dp"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:src="@drawable/plate" />-->
 
-        <ImageView
-            android:id="@+id/point"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:foreground="@drawable/point"
-            android:layout_above="@+id/plate"
-            android:layout_centerInParent="true" />
+<!--        <ImageView-->
+<!--            android:id="@+id/point"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:foreground="@drawable/point"-->
+<!--            android:layout_above="@+id/plate"-->
+<!--            android:layout_centerInParent="true" />-->
 
-        <Button
-            android:id="@+id/rotateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/plate"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:text="start"
-            android:onClick="onSpinButtonClick"/>
+<!--        <Button-->
+<!--            android:id="@+id/rotateButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@id/plate"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:text="start"-->
+<!--            android:onClick="onSpinButtonClick"/>-->
 
-        <TextView
-            android:id="@+id/textLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="16dp"
-            android:text="飯"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
+<!--        <TextView-->
+<!--            android:id="@+id/textLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:layout_marginBottom="16dp"-->
+<!--            android:text="飯"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textColor="@color/black"/>-->
 
     </RelativeLayout>
 
