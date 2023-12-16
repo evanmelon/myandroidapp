@@ -15,13 +15,11 @@ import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.myapplication.databinding.ActivityMapsBinding
-import com.example.myapplication.ui.theme.Spin
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -99,7 +97,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 false
             }
         }
-        val spinButton: ImageView = findViewById(R.id.spinbutton)
+        val spinButton: ImageView = findViewById(R.id.myImageButton)
         spinButton.setOnClickListener {
             val intent = Intent(this, Spin::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
