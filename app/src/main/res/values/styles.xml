@@ -16,5 +16,14 @@
         <item name="backgroundTint">#A75338</item>
         <!-- 其他你想設定的屬性 -->
     </style>
+    <declare-styleable name="TurntableView">
+        <attr name="background_color" format="color" />
+        <attr name="sector_color" format="color" />
+        <attr name="center_stroke_color" format="color" />
+        <attr name="center_bottom_color" format="color" />
+        <attr name="sector_text_color" format="color" />
+        <attr name="start_btn_color" format="color" />
+        <attr name="start_text_color" format="color" />
+        </declare-styleable>
 
 </resources>

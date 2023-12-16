@@ -63,6 +63,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 //    implementation("com.google.android.material:material:1.11.0")
+//    implementation("com.google.android.material:material:1.11.0")
 //    implementation ("com.google.android.material:material:1.5.0")
 //    implementation("com.google.android.material:material:1.10.0")
     testImplementation("junit:junit:4.13.2")
@@ -76,5 +77,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
-    implementation("com.google.firebase:firebase-auth")
+//    implementation ("io.reactivex.rxjava2:rxjava:3.1.8")
+    implementation ("io.reactivex.rxjava2:rxandroid:2.0.1")
 }

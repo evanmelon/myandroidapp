@@ -61,9 +61,13 @@
 
     <ImageButton
         android:id="@+id/myImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/spin_icon"
-        android:layout_centerInParent="true"/>
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="0dp"
+        android:text="Spin"
+        android:background="@drawable/spin_icon" />
 
 </RelativeLayout>
