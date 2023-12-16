@@ -59,5 +59,11 @@
         android:onClick="onProfileButtonClick"
         android:background="@drawable/button_background" />
 
+    <ImageButton
+        android:id="@+id/myImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/spin_icon"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
