@@ -1,41 +1,36 @@
 package com.example.myapplication
 
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.app.ActivityOptions
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-
+import android.transition.Fade
+import android.util.Log
+import android.view.View
+import android.view.Window
+import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.myapplication.databinding.ActivityMapsBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.example.myapplication.databinding.ActivityMapsBinding
-import android.util.Log
-import androidx.core.content.ContextCompat
-import androidx.core.app.ActivityCompat
-
-import android.Manifest
-import android.app.ActivityOptions
-import android.content.pm.PackageManager
-import android.location.Location
-import android.widget.Button
-import android.widget.EditText
-import android.view.inputmethod.EditorInfo
-import android.content.Intent
-import android.transition.Explode
-import android.transition.Fade
-import android.transition.Slide
-import android.view.View
-import android.view.Window
-import androidx.core.graphics.blue
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -46,7 +41,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val handler = Handler(Looper.getMainLooper())
     private val delayMillis = 5000L // 5 seconds delay
     private val mapUpdateDelayMillis = 500L // 5 seconds delay
-
+    private var zoomLevel: Float = 15f
 
     companion object {
         private const val REQUEST_LOCATION_PERMISSION = 1
@@ -134,6 +129,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val myButton: Button = findViewById(R.id.myButton)
         val editText: EditText = findViewById(R.id.editText)
         mMap = googleMap
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(25.0, 121.0), zoomLevel))
         mMap.setOnCameraMoveStartedListener { reason ->
             if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 Log.d("location", "CameraMove Started")
@@ -153,6 +149,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.setOnCameraIdleListener {
             Log.d("location", "Camera Idle")
             // User stopped moving the map, start or restart location updates
+            zoomLevel = mMap.cameraPosition.zoom
+            Log.d("MapZoom", "Zoom Level: $zoomLevel")
             if (!isIdleUpdate){
                 myButton.visibility = View.VISIBLE
                 editText.visibility = View.VISIBLE
@@ -179,7 +177,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         Log.e("Location","${location.latitude}, ${location.longitude}")
                         val userLatLng = LatLng(location.latitude, location.longitude)
                         mMap.addMarker(MarkerOptions().position(userLatLng).title("Your Location"))
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, zoomLevel))
+//                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
                     }
                 }
                 .addOnFailureListener { e ->
@@ -191,6 +190,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION)
         }
         startLocationUpdates()
+
 
 //
 //        // Add a marker in Sydney and move the camera
@@ -227,7 +227,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .icon(blueMarkerIcon)
                 .anchor(0.5f, 1.0f)
         )
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
+//        mMap.animateCamera(CameraUpdateFactory.newLatLng(userLatLng))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, zoomLevel))
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
     }
     private fun stopLocationUpdatesForAWhile() {
         // Stop location updates for a while
