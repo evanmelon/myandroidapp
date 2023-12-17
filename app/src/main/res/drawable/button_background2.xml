@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="false">
+        <!--形狀長方形-->
+        <shape android:shape="rectangle">
+            <solid android:color="#FFE4C4"/>
+            <!--四周圓角角度4dp-->
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+    <!--點擊按鈕時的樣式-->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#DEB887"/>
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+
+</selector>

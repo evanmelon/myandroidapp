@@ -15,16 +15,39 @@ import kotlin.random.Random
 import android.graphics.Paint
 import androidx.compose.ui.graphics.Color
 import android.graphics.Canvas
+import android.widget.EditText
 
 class Spin : AppCompatActivity() {
-        private lateinit var textLabel: TextView
+        private lateinit var uploadButton: Button
+        private lateinit var textView: TextView
+        private lateinit var editText: EditText
+        private lateinit var turntable: Turntable
         override fun onCreate(savedInstanceState: Bundle?) {
                 super.onCreate(savedInstanceState)
                 supportActionBar?.hide()
                 setContentView(R.layout.activity_spin)
-//                textLabel = findViewById(R.id.textLabel)
-                val turntable: Turntable = findViewById(R.id.turntable)
+                turntable = findViewById(R.id.turntable)
                 turntable.startTurn("1", 5)
+                byId() // 綁定元件
+                updateData() // 上傳資料到 TextView
+
+        }
+        // 綁定元件
+        private fun byId() {
+                uploadButton = findViewById(R.id.uploadButton)
+                textView = findViewById(R.id.textView)
+                editText = findViewById(R.id.editText)
+        }
+
+        // 上傳資料到 TextView
+        private fun updateData() {
+                uploadButton.setOnClickListener {
+                        val str = editText.text.toString() // 拿取 EditText 字串
+                        editText.text.clear() // 清除輸入框的資料
+                        textView.text = str // 設定文字到 TextView
+                        var selectList = str.split(",").toMutableList() // 將文字存入一個LIST
+                        turntable.setSelectList((selectList))
+                }
         }
 //        fun onSpinButtonClick(view: View) {
 ////                val rouletteImageView: ImageView = findViewById(R.id.plate)

@@ -11,12 +11,12 @@
     <color name="colorPrimaryDark">#FF9800</color>
     <color name="colorAccent">#FF4081</color>
     <color name="dark_gray">#676767</color>
-    <color name="bjy_base_turntable_default_background_color">#FFFFFFFF</color>
-    <color name="bjy_base_turntable_default_sector_color">#FFFF0000</color>
-    <color name="bjy_base_turntable_default_center_stroke_color">#FF0000FF</color>
-    <color name="bjy_base_turntable_default_center_bottom_color">#FF00FF00</color>
+    <color name="bjy_base_turntable_default_background_color">#DEB887</color>
+    <color name="bjy_base_turntable_default_sector_color">#FFE4C4</color>
+    <color name="bjy_base_turntable_default_center_stroke_color">#BDB76B</color>
+    <color name="bjy_base_turntable_default_center_bottom_color">#CD853F</color>
     <color name="bjy_base_turntable_default_sector_text_color">#FF000000</color>
-    <color name="bjy_base_turntable_default_start_btn_color">#FFFF00FF</color>
-    <color name="bjy_base_turntable_default_start_text_color">#FF00FFFF</color>
+    <color name="bjy_base_turntable_default_start_btn_color">#BDB76B</color>
+    <color name="bjy_base_turntable_default_start_text_color">#FF000000</color>
 
 </resources>

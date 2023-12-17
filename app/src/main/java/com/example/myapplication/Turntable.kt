@@ -1,7 +1,7 @@
 package com.example.myapplication
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -11,7 +11,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
-//import com.baijiayun.liveuibase.R
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -20,13 +19,14 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
-
+import kotlin.random.Random
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 
 class Turntable : View  {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_turntable)
-//    }
+
     constructor(context: Context) : super(context) {
         init(null)
     }
@@ -40,61 +40,75 @@ class Turntable : View  {
         init(attrs)
     }
 
-    // 默认尺寸
+    // 默認尺寸
     private val defaultSize = 150
-    // 扇形半径比例
+    // 扇形半徑比例
     private val sectorProportion = 0.84F
-    // 外圈小圆半径比例
+    // 外圈小圆半徑比例
     private val littleCircleProportion = 0.02F
     // 中心圆比例
     private val centerProportion = 0.35F
-    // 中心圆间隔比例
+    // 中心圆間隔比例
     private val centerDistanceProportion = 0.05F
-    // 转盘文字比例
-    private val sectorTextSizeProportion = 0.2F
+    // 轉盤文字比例
+    private val sectorTextSizeProportion = 0.1F
     // 中心文字比例
     private val centerTextProportion = 0.3F
     // 背景颜色（大圆）颜色
     private var bgColor = 0
     // 扇形颜色
     private var sectorColor = 0
-    // 中心圆圈边框颜色
+    // 中心圆圈邊框颜色
     private var centerStrokeColor = 0
-    // 中心圆圈底层颜色
+    // 中心圆圈底層颜色
     private var centerBottomColor = 0
-    // 开始按钮背景颜色 = 扇形选中背景颜色
+    // 按钮背景颜色 = 扇形背景颜色
     private var startColor = 0
     // 扇形文字颜色
     private var sectorTextColor = 0
-    // 开始按钮文字颜色 = 扇形选中文字颜色
+    // 按钮文字颜色 = 扇形選中文字颜色
     private var startTextColor = 0
-    // 选项列表
-    private var selectList = arrayListOf("1", "2", "3", "4", "5", "6")
-    // 当前选中的选项下标
+    // 選項列表
+    private var selectList = arrayListOf("noodles", "pasta", "curry", "hotpot", "steak", "breakfast")
+    // 當前選中的選項下標
     private var selectedIndex = -1
-    // 即将选中的选项下标
+    // 即將選中的選項下標
     private var willSelectIndex = 4
-    // 转盘转动的时间 seconds
+    // 轉盤轉動時間 seconds
     private var turnTime = 5
-    // 转盘旋转
+    // 轉盤旋轉
     private var disposableOfTurn: Disposable? = null
-    // 转盘按钮文字
-    private var topText = ""
+    // 轉盤按鈕文字
+    private var topText = "start"
     // 初始速度 40ms 一个
     private var startSpeed = 40
     // 结束速度 200ms 一个
     private var endSpeed = 200
     // 速度列表 1s 一个速度
     private var speedList = mutableListOf<Int>()
-    // 当前速度
+    // 當前速度
     private var currentSpeed = 1
-    // 初始是否可点击
+    // 初始是否可點擊
     private var initialClickable = false
+
+    private val startButtonRect = RectF()
 
     private val mPaint by lazy {
         Paint()
     }
 
+    fun setSelectList(list: List<String>){
+        var index = 0
+        for(i in list.indices) {
+            if(i<6) {
+                selectList[index] = list[i]
+                index++
+            }
+            else{
+                selectList.add(list[i])
+            }
+        }
+    }
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = getRealSize(widthMeasureSpec)
         val height = getRealSize(heightMeasureSpec)
@@ -115,14 +129,14 @@ class Turntable : View  {
         return when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 if (isClickCenter(event.x, event.y)) {
-                    performClick()
+                    // 如果點擊到 "start" 按鈕，執行轉盤開始的邏輯
+                    if (startButtonRect.contains(event.x, event.y)) {
+                        startTurn(selectList[willSelectIndex], turnTime)
+                    }
                 }
                 return isClickCenter(event.x, event.y)
             }
-            MotionEvent.ACTION_MOVE -> {
-                return false
-            }
-            MotionEvent.ACTION_UP -> {
+            MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
                 return false
             }
             else -> super.onTouchEvent(event)
@@ -243,7 +257,7 @@ class Turntable : View  {
         invalidate()
         computeSpeed()
         currentSpeed = speedList[0]
-        initialClickable = isClickable
+        initialClickable = true
         isClickable = false
         disposableOfTurn = Observable.interval(0, 1, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
@@ -258,10 +272,10 @@ class Turntable : View  {
                     topText = (turnTime - it / 1000).toString()
                     invalidate()
                 }
-                if (it == turnTime * 1000L + 500) {
+                if (it == turnTime * 1000L) {
                     if (initialClickable) {
                         isClickable = true
-                        topText = "开始"
+                        topText = "start"
                     } else {
                         topText = ""
                     }
@@ -279,7 +293,7 @@ class Turntable : View  {
     /**
      * 释放资源，父容器销毁时须调用
      */
-    fun release() {
+    private fun release() {
         disposableOfTurn?.dispose()
     }
 
@@ -293,6 +307,7 @@ class Turntable : View  {
         startColor = typedArray.getColor(R.styleable.TurntableView_start_btn_color, ContextCompat.getColor(context, R.color.bjy_base_turntable_default_start_btn_color))
         startTextColor = typedArray.getColor(R.styleable.TurntableView_start_text_color, ContextCompat.getColor(context, R.color.bjy_base_turntable_default_start_text_color))
         typedArray.recycle()
+
     }
 
     private fun getRealSize(measureSpec: Int): Int {
@@ -319,6 +334,7 @@ class Turntable : View  {
         }
     }
 
+    // 畫扇形
     private fun drawSector(canvas: Canvas?) {
         val sectorRadius = (measuredWidth / 2) * sectorProportion
         val sectorCenterRadius = (measuredWidth / 2) * 0.07f
@@ -327,6 +343,7 @@ class Turntable : View  {
         mPaint.color = sectorColor
         mPaint.style = Paint.Style.FILL
         var angle = 360F / selectList.size
+
         for (i in 0 until selectList.size) {
             if ((i + 2) % selectList.size == selectedIndex) {
                 mPaint.color = startColor
@@ -336,7 +353,8 @@ class Turntable : View  {
             val cx = centerX + cos(angleToRadian(angle * i)).toFloat() * sectorCenterRadius
             val cy = centerY + sin(angleToRadian(angle * i)).toFloat() * sectorCenterRadius
             val oval = RectF(cx - sectorRadius, cy - sectorRadius, cx + sectorRadius, cy + sectorRadius)
-            canvas?.drawArc(oval, (angle * i) - (angle / 2), angle, true, mPaint)
+
+            canvas?.drawArc(oval, (angle * i ) - (angle / 2), angle, true, mPaint)
         }
         mPaint.color = sectorColor
         mPaint.alpha = 50
@@ -373,6 +391,18 @@ class Turntable : View  {
             mPaint.color = bgColor
         }
         canvas?.drawCircle(centerX, centerY, (centerX * centerProportion) -  ((centerX * centerDistanceProportion) * 2), mPaint)
+
+        // 繪製 "start" 按鈕
+        val buttonRadius = (centerX * centerProportion) - ((centerX * centerDistanceProportion) * 2)
+        startButtonRect.set(centerX - buttonRadius, centerY - buttonRadius, centerX + buttonRadius, centerY + buttonRadius)
+
+        if (isClickable) {
+            mPaint.color = startColor
+        } else {
+            mPaint.color = bgColor
+        }
+        canvas?.drawCircle(centerX, centerY, buttonRadius, mPaint)
+
     }
 
     private fun drawText(canvas: Canvas?) {
@@ -382,21 +412,23 @@ class Turntable : View  {
         val angle = 360F / selectList.size
         mPaint.color = sectorTextColor
         mPaint.textSize = centerX * sectorTextSizeProportion
+        // 控制轉的時候變顏色
         for (i in 0 until selectList.size) {
             if (selectedIndex == (i + 2) % selectList.size) {
                 mPaint.color = Color.WHITE
             } else {
                 mPaint.color = sectorTextColor
             }
-            val cx = centerX + cos(angleToRadian(angle * i)).toFloat() * radius - ((measuredWidth / 2) * sectorTextSizeProportion * 0.42F)
+            val cx = centerX + cos(angleToRadian(angle * i)).toFloat() * radius - ((measuredWidth / 2) * sectorTextSizeProportion * 0.42F)-70f
             val cy = centerY + sin(angleToRadian(angle * i)).toFloat() * radius + ((measuredWidth / 2) * sectorTextSizeProportion * 0.42F)
             canvas?.drawText(selectList[(i + 2) % selectList.size], cx, cy, mPaint)
         }
         if (isClickable) {
             mPaint.color = startTextColor
-            mPaint.textSize = centerX * sectorTextSizeProportion * 0.8f
-            topText = "开始"
-            canvas?.drawText(topText, centerX * (1 - 0.8F * sectorTextSizeProportion), centerY * (1 + 0.3F * sectorTextSizeProportion), mPaint)
+            mPaint.textSize = centerX * sectorTextSizeProportion * 1.2f
+            topText = "start"
+            mPaint.color = Color.WHITE
+            canvas?.drawText(topText, centerX * (1 - 1.2F * sectorTextSizeProportion), centerY * (1 + 0.3F * sectorTextSizeProportion), mPaint)
         } else {
             mPaint.color = sectorTextColor
             mPaint.textSize = centerX * centerTextProportion
@@ -419,9 +451,9 @@ class Turntable : View  {
         return true
     }
 
-
-    // 确保最后可以选中要选择的
+    // 隨機指定最後結果
     private fun computeSpeed() {
+        val randomNum = Random.nextInt(1000, 5000)
         if (selectedIndex < 0) {
             selectedIndex = 0
         }
@@ -440,19 +472,20 @@ class Turntable : View  {
         }
         speedList.add(endSpeed)
         for (i in 0 until speedList.size) {
-            var count = (1000 / speedList[i])
+            var count = (randomNum / speedList[i])
             if (count < selectList.size) {
                 count = selectList.size
             } else {
                 count -= (count % selectList.size)
             }
-            speedList[i] = 1000 / count
+            speedList[i] = randomNum / count
         }
         for (i in 0 until distance) {
-            val count = (1000 / speedList[i]) + 1
-            speedList[i] = 1000 / count
+            val count = (randomNum / speedList[i]) + 1
+            speedList[i] = randomNum / count
         }
     }
+
 
 
 }
