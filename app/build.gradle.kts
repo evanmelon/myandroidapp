@@ -63,7 +63,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 //    implementation("com.google.android.material:material:1.11.0")
-//    implementation ("com.google.android.material:material:1.5.0")
+    implementation ("com.google.android.material:material:1.5.0")
 //    implementation("com.google.android.material:material:1.10.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -81,4 +81,6 @@ dependencies {
     implementation ("com.google.maps.android:places-ktx:2.0.0")
 //    implementation ("io.reactivex.rxjava2:rxjava:3.1.8")
     implementation ("io.reactivex.rxjava2:rxandroid:2.0.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
 }
