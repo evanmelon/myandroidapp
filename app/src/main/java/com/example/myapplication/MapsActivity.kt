@@ -115,13 +115,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
 
         // [END maps_current_place_map_fragment]
         // [END_EXCLUDE]
-        val myButton: Button = findViewById(R.id.myButton)
-
-        myButton.setOnClickListener {
-            // 在这里处理按钮点击事件，例如导航到登入页面
-            val intent = Intent(this, FirebaseUIActivity::class.java)
-            startActivity(intent)
-        }
         val homeButton: Button = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {
 

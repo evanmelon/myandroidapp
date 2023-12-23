@@ -32,14 +32,6 @@
 <!--        android:layout_margin="16dp"-->
 <!--        android:layout_gravity="bottom|end" />-->
     <Button
-        android:id="@+id/myButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:text="Sign in" />
-    <Button
         android:id="@+id/homeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

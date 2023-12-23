@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FAEBD7"
     tools:context=".Profile">
 
     <RelativeLayout
@@ -33,24 +34,24 @@
             android:layout_marginRight="80dp"
             android:layout_marginBottom="8dp"
             android:backgroundTintMode="add"
-            android:hint="Enter location"
+            android:hint="Enter restaurant/food/beverage..."
             android:imeOptions="actionDone"
             android:inputType="text"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:maxLines="1"
             android:singleLine="true" />
 
         <Button
             android:id="@+id/uploadButton"
-            android:layout_width="60dp"
+            android:layout_width="70dp"
             android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="9dp"
             android:layout_marginRight="-374dp"
             android:background="@drawable/button_background2"
-            android:text="上傳"
+            android:text="確認"
             android:textColor="@color/black" />
 
         <TextView
@@ -59,9 +60,9 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_weight="5"
-            android:text="..."
+            android:text=" "
             android:textSize="20dp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/black"/>
 
 
         <!--        <ImageView-->

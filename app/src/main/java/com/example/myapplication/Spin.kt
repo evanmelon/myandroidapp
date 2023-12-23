@@ -43,10 +43,12 @@ class Spin : AppCompatActivity() {
         private fun updateData() {
                 uploadButton.setOnClickListener {
                         val str = editText.text.toString() // 拿取 EditText 字串
-                        editText.text.clear() // 清除輸入框的資料
-                        textView.text = str // 設定文字到 TextView
-                        var selectList = str.split(",").toMutableList() // 將文字存入一個LIST
-                        turntable.setSelectList((selectList))
+                        if(str.isNotEmpty()) {
+                                editText.text.clear() // 清除輸入框的資料
+                                textView.text = str // 設定文字到 TextView
+                                var selectList = str.split(",").toMutableList() // 將文字存入一個LIST
+                                turntable.setSelectList((selectList))
+                        }
                 }
         }
 //        fun onSpinButtonClick(view: View) {

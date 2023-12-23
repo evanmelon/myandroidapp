@@ -1,6 +1,8 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.AuthUI.IdpConfig
@@ -25,6 +27,13 @@ class FirebaseUIActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createSignInIntent()
+
+        val buttonLogin: Button = findViewById(R.id.buttonLogin)
+
+        buttonLogin.setOnClickListener {
+            val intent = Intent(this, Personal::class.java)
+            startActivity(intent)
+        }
 
 //        setContentView(R.layout.activity_firebase_ui)
 

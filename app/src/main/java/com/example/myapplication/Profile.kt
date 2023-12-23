@@ -1,10 +1,12 @@
 package com.example.myapplication
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.Explode
 import android.transition.Fade
 import android.view.Window
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 
@@ -26,5 +28,13 @@ class Profile : AppCompatActivity() {
         followersTextView.text = "Followers: 100"
         followingTextView.text = "Following: 50"
         postsTextView.text = "Posts: 200"
+
+        val signinButton: Button = findViewById(R.id.signinButton)
+
+        signinButton.setOnClickListener {
+            // 在这里处理按钮点击事件，例如导航到登入页面
+            val intent = Intent(this, FirebaseUIActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

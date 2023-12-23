@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAEBD7">
+
+    <!--上半部-->
+    <androidx.cardview.widget.CardView
+        android:layout_width="375dp"
+        android:layout_height="170dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="3dp">
+
+        <!--user name-->
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="User name"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            >
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <!--posts-->
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:text="Posts"
+                android:gravity="center"
+                >
+            </TextView>
+            <!--Followers-->
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text="Followers"
+                android:gravity="center"
+                >
+            </TextView>
+            <!--Following-->
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text="Following"
+                android:gravity="center"
+                >
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <!--posts num-->
+            <TextView
+                android:id="@+id/posts"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:text="0"
+                android:gravity="center"
+                >
+            </TextView>
+            <!--Followers num-->
+            <TextView
+                android:id="@+id/followers"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text="0"
+                android:gravity="center"
+                >
+            </TextView>
+            <!--Following num-->
+            <TextView
+                android:id="@+id/following"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text="0"
+                android:gravity="center"
+                >
+            </TextView>
+
+        </LinearLayout>
+
+        <!--個人簡介-->
+        <TextView
+            android:layout_width="180dp"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="15dp"
+            android:text="人生好難"
+            android:textSize="10sp"
+            >
+        </TextView>
+
+        <Button
+            android:id="@+id/Edit"
+            android:layout_width="65dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="130dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_background3"
+            android:text="Follow"
+            android:textSize="12dp"
+            android:textColor="#808080"
+            >
+        </Button>
+
+    </androidx.cardview.widget.CardView>
+
+    <!--下半部-->
+    <ScrollView
+        android:layout_width="400dp"
+        android:layout_height="525dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:padding="10dp"
+            android:text="貼文~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            >
+
+        </TextView>
+
+    </ScrollView>
+
+</RelativeLayout>

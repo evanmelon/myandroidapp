@@ -11,6 +11,7 @@
     <color name="colorPrimaryDark">#FF9800</color>
     <color name="colorAccent">#FF4081</color>
     <color name="dark_gray">#676767</color>
+    <color name="bisque">#FFE4C4</color>
     <color name="bjy_base_turntable_default_background_color">#DEB887</color>
     <color name="bjy_base_turntable_default_sector_color">#FFE4C4</color>
     <color name="bjy_base_turntable_default_center_stroke_color">#BDB76B</color>
