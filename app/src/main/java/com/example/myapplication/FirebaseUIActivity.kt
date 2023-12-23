@@ -28,15 +28,6 @@ import android.util.Log
 //import com.google.firebase.quickstart.auth.R
 
 class FirebaseUIActivity : AppCompatActivity(){
-    val currentUser: Flow<User?>
-        get() = callbackFlow {
-            val listener =
-                FirebaseAuth.AuthStateListener { auth ->
-                    this.trySend(auth.currentUser?.let { User(it.uid) })
-                }
-            Firebase.auth.addAuthStateListener(listener)
-            awaitClose { Firebase.auth.removeAuthStateListener(listener) }
-        }
     // [START auth_fui_create_launcher]
     // See: https://developer.android.com/training/basics/intents/result
     private val signInLauncher = registerForActivityResult(

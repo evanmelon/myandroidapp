@@ -84,6 +84,6 @@ dependencies {
     implementation ("io.reactivex.rxjava2:rxandroid:2.0.1")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     implementation("com.google.firebase:firebase-database")
-    implementation ("com.google.firebase:firebase-database-ktx:23.0.0")
+//    implementation ("com.google.firebase:firebase-database-ktx:23.0.0")
 
 }
