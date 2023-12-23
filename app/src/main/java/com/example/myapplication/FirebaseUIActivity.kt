@@ -28,12 +28,12 @@ class FirebaseUIActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         createSignInIntent()
 
-        val buttonLogin: Button = findViewById(R.id.buttonLogin)
-
-        buttonLogin.setOnClickListener {
-            val intent = Intent(this, Personal::class.java)
-            startActivity(intent)
-        }
+//        val buttonLogin: Button = findViewById(R.id.buttonLogin)
+//
+//        buttonLogin.setOnClickListener {
+//            val intent = Intent(this, Personal::class.java)
+//            startActivity(intent)
+//        }
 
 //        setContentView(R.layout.activity_firebase_ui)
 

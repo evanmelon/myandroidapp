@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.app.ActivityOptions
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -29,12 +30,13 @@ class Profile : AppCompatActivity() {
         followingTextView.text = "Following: 50"
         postsTextView.text = "Posts: 200"
 
-        val signinButton: Button = findViewById(R.id.signinButton)
+        val signButton: Button = findViewById(R.id.signinButton)
+        signButton.setOnClickListener {
 
-        signinButton.setOnClickListener {
-            // 在这里处理按钮点击事件，例如导航到登入页面
             val intent = Intent(this, FirebaseUIActivity::class.java)
-            startActivity(intent)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+
+//            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
         }
     }
 }
