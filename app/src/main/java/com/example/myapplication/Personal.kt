@@ -5,15 +5,22 @@ import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.example.myapplication.AccountService
+import javax.inject.Inject
+import android.content.Context
 
 
-class Personal : AppCompatActivity() {
+class Personal: AppCompatActivity() {
+    private lateinit var database: DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
+        database = Firebase.database.reference
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal)
 
@@ -29,11 +36,12 @@ class Personal : AppCompatActivity() {
             val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
-
         // 新增貼文
         val postButton: Button = findViewById(R.id.newpost)
         postButton.setOnClickListener {
 
+            val intent = Intent(this, Newpost::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
 
         // 使用者輸入個人簡介

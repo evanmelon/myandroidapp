@@ -1,7 +1,9 @@
 package com.example.myapplication
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -23,6 +25,11 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 
 
 //import com.google.firebase.quickstart.auth.R
@@ -30,6 +37,8 @@ import android.util.Log
 class FirebaseUIActivity : AppCompatActivity(){
     // [START auth_fui_create_launcher]
     // See: https://developer.android.com/training/basics/intents/result
+//    val data: Data = applicationContext as Data
+//    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract(),
     ) { res ->
@@ -75,6 +84,11 @@ class FirebaseUIActivity : AppCompatActivity(){
         Firebase.auth.signInWithEmailAndPassword(email, password).await()
         val user = Firebase.auth.currentUser
         user?.let {
+//            this.dataStore.edit { settings ->
+//                val currentCounterValue = settings[EXAMPLE_COUNTER] ?: 0
+//                settings[EXAMPLE_COUNTER] = currentCounterValue + 1
+//            }
+//            data.saveUserData(data, it.uid, it.displayName.toString(), it.email.toString())
             // Name, email address, and profile photo Url
             val name = it.displayName
             val email1 = it.email
@@ -87,6 +101,9 @@ class FirebaseUIActivity : AppCompatActivity(){
             // authenticate with your backend server, if you have one. Use
             // FirebaseUser.getIdToken() instead.
             val uid = it.uid
+
+
+
         }
     }
 
