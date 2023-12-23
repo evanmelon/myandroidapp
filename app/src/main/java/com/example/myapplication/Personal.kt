@@ -5,10 +5,12 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myapplication.models.Post
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -36,6 +38,11 @@ class Personal: AppCompatActivity() {
                 posts = findViewById(R.id.posts)
                 val postCount = dataSnapshot.childrenCount.toInt() // 获取帖子数量
                 posts.text = postCount.toString()
+                val posts = dataSnapshot.children.mapNotNull { it.getValue(Post::class.java) }
+                posts.forEach { post ->
+                    Log.d("post", "title: ${post.title}, body: ${post.body}, star: ${post.stars}")
+                    // 这里可以访问 post 的属性，如 post.title 和 post.body
+                }
                 // 处理帖子数量，例如更新UI
             }
 
