@@ -2,28 +2,50 @@ package com.example.myapplication
 
 import android.app.ActivityOptions
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.example.myapplication.AccountService
-import javax.inject.Inject
-import android.content.Context
 
 
 class Personal: AppCompatActivity() {
     private lateinit var database: DatabaseReference
+    private lateinit var posts: TextView
+    private lateinit var userName: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         database = Firebase.database.reference
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal)
+        val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+        val userId = sharedPref.getString("USER_ID", null)
+        val name = sharedPref.getString("NAME", null)
+        val email = sharedPref.getString("EMAIL", null)
+        val userPostsRef = Firebase.database.reference.child("user-posts").child(userId.toString())
+        userPostsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                posts = findViewById(R.id.posts)
+                val postCount = dataSnapshot.childrenCount.toInt() // 获取帖子数量
+                posts.text = postCount.toString()
+                // 处理帖子数量，例如更新UI
+            }
 
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 处理错误
+            }
+        })
+
+        userName = findViewById(R.id.UserName)
+        userName.text = name
         val homeButton: Button = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {
 
