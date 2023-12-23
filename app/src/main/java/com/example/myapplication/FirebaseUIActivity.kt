@@ -61,11 +61,12 @@ class FirebaseUIActivity : AppCompatActivity(){
                 Log.d("login", "hi1")
                 login(account.text.toString(), password.text.toString())
             }
+            val intent = Intent(this, Personal::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
         buttonSignUp.setOnClickListener {
             createSignInIntent()
         }
-
 
     }
 

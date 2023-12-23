@@ -12,31 +12,20 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.getValue
 
-// User(userId, email)
+// User(userId, name, email, post, edit)
 data class User(
     val userId : String,
-    val email : String
+    val name : String,
+    val email : String,
+    val post : String,
+    val edit : String
 )
-//Post(userId, title, body)
-data class Post(
-    val userId : String,
-    val title: String,
-    val body : String
-){
-    fun toMap(): Map<String, Any> {
-        val result = HashMap<String, Any>()
-        result["userId"] = userId
-        result["title"] = title
-        result["body"] = body
-        return result
-    }
-}
 abstract class UserData {
 
     // Firebase Database 根節點
     private val mDatabase : DatabaseReference = FirebaseDatabase.getInstance().reference
     private val userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
-    // 可以放東西進到suerID
+    // 可以放東西進到userID
     val mUserRef : DatabaseReference= mDatabase.child("User_database").child(userId)
 
     // [START declare_database_ref]
@@ -50,17 +39,16 @@ abstract class UserData {
     }
 
     // 新增用戶
-    fun writeNewUser(userId: String, name: String, email: String) {
-        val user = User(name, email)
+    fun writeNewUser(userId: String, name: String, email: String, post: String, edit: String) {
+        val user = User(userId, name, email, post, edit)
 
         database.child("users").child(userId).setValue(user)
     }
 
     // 可以知道資料何時提交
-    fun writeNewUserWithTaskListeners(userId: String, email: String) {
-        val user = User(userId, email)
+    fun writeNewUserWithTaskListeners(userId: String, name : String, email: String, post: String, edit: String) {
+        val user = User(userId, name, email, post, edit)
 
-        // [START rtdb_write_new_user_task]
         database.child("users").child(userId).setValue(user)
             .addOnSuccessListener {
                 // Write was successful!
@@ -78,7 +66,7 @@ abstract class UserData {
         val postListener = object : ValueEventListener {
             // 讀取給定路徑中內容
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val post = dataSnapshot.getValue<Post>()
+                val post = dataSnapshot.getValue<User>()
             }
             //
             override fun onCancelled(databaseError: DatabaseError) {
@@ -88,24 +76,24 @@ abstract class UserData {
         postReference.addValueEventListener(postListener)
     }
 
-    // 建立新貼文及更新
-    private fun writeNewPost(userId: String, title: String, body: String) {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        val key = database.child("posts").push().key
-        if (key == null) {
-            Log.w(TAG, "Couldn't get push key for posts")
-            return
-        }
-
-        val post = Post(userId, title, body)
-        val postValues = post.toMap()
-
-        val childUpdates = hashMapOf<String, Any>(
-            "/posts/$key" to postValues,
-            "/user-posts/$userId/$key" to postValues,
-        )
-        database.updateChildren(childUpdates)
-    }
+//    // 建立新貼文及更新
+//    private fun writeNewPost(userId: String, name: String, email: String, post: Post, edit: String) {
+//        // Create new post at /user-posts/$userid/$postid and at
+//        // /posts/$postid simultaneously
+//        val key = database.child("posts").push().key
+//        if (key == null) {
+//            Log.w(TAG, "Couldn't get push key for posts")
+//            return
+//        }
+//
+//        val post = User(userId, name, email, post, edit)
+//        val postValues = post.toMap()
+//
+//        val childUpdates = hashMapOf<String, Any>(
+//            "/posts/$key" to postValues,
+//            "/user-posts/$userId/$key" to postValues,
+//        )
+//        database.updateChildren(childUpdates)
+//    }
 
 }

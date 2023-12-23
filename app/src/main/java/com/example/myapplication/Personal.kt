@@ -17,6 +17,25 @@ class Personal : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal)
 
+        val homeButton: Button = findViewById(R.id.homeButton)
+        homeButton.setOnClickListener {
+
+            val intent = Intent(this, Home::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+        }
+        val mapButton: Button = findViewById(R.id.map)
+        mapButton.setOnClickListener {
+
+            val intent = Intent(this, MapsActivity::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+        }
+
+        // 新增貼文
+        val postButton: Button = findViewById(R.id.newpost)
+        postButton.setOnClickListener {
+
+        }
+
         // 使用者輸入個人簡介
         val textmsg:TextView = findViewById(R.id.textmsg)
         val editButton: Button = findViewById(R.id.Edit)
@@ -33,11 +52,6 @@ class Personal : AppCompatActivity() {
                 .create()
 
             dialog.show()
-
         }
-        // 個人簡介寫到資料庫
-        val database = Firebase.database
-        val myRef = database.getReference("message")
-        myRef.setValue(findViewById(R.id.textmsg))
     }
 }
