@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -123,7 +124,9 @@ class FirebaseUIActivity : AppCompatActivity(){
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            // ...
+            val intent = Intent(this, Personal::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
@@ -215,6 +218,7 @@ class FirebaseUIActivity : AppCompatActivity(){
         if (AuthUI.canHandleIntent(intent)) {
             val extras = intent.extras ?: return
             val link = extras.getString("email_link_sign_in")
+            // 獲取email link
             if (link != null) {
                 val signInIntent = AuthUI.getInstance()
                     .createSignInIntentBuilder()
