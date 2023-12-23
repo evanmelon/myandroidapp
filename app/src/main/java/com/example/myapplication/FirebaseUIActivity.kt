@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.AuthUI.IdpConfig
@@ -11,10 +12,30 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import android.util.Log
+
+
 //import com.google.firebase.quickstart.auth.R
 
-class FirebaseUIActivity : AppCompatActivity() {
-
+class FirebaseUIActivity : AppCompatActivity(){
+    val currentUser: Flow<User?>
+        get() = callbackFlow {
+            val listener =
+                FirebaseAuth.AuthStateListener { auth ->
+                    this.trySend(auth.currentUser?.let { User(it.uid) })
+                }
+            Firebase.auth.addAuthStateListener(listener)
+            awaitClose { Firebase.auth.removeAuthStateListener(listener) }
+        }
     // [START auth_fui_create_launcher]
     // See: https://developer.android.com/training/basics/intents/result
     private val signInLauncher = registerForActivityResult(
@@ -26,7 +47,8 @@ class FirebaseUIActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        createSignInIntent()
+        setContentView(R.layout.activity_firebase_ui)
+//        createSignInIntent() //登入的按鈕需要做的
 
 //        val buttonLogin: Button = findViewById(R.id.buttonLogin)
 //
@@ -35,8 +57,44 @@ class FirebaseUIActivity : AppCompatActivity() {
 //            startActivity(intent)
 //        }
 
-//        setContentView(R.layout.activity_firebase_ui)
+        val dialogView = layoutInflater.inflate(R.layout.activity_firebase_ui, null)
+        val buttonSignIn: Button = findViewById(R.id.buttonSignIn)
+        val buttonSignUp: Button = findViewById(R.id.buttonSignUp)
+        val account: EditText = findViewById(R.id.editTextEmail)
+        val password: EditText = findViewById(R.id.editTextPassword)
+        Log.d("login", "hi")
+        buttonSignIn.setOnClickListener {
+            Log.d("login", "button click")
+            CoroutineScope(Dispatchers.IO).launch{
+                Log.d("login", "hi1")
+                login(account.text.toString(), password.text.toString())
+            }
+        }
+        buttonSignUp.setOnClickListener {
+            createSignInIntent()
+        }
 
+
+    }
+
+    private suspend fun login(email: String, password: String){
+        Log.d("login", "email: $email")
+        Firebase.auth.signInWithEmailAndPassword(email, password).await()
+        val user = Firebase.auth.currentUser
+        user?.let {
+            // Name, email address, and profile photo Url
+            val name = it.displayName
+            val email1 = it.email
+            val photoUrl = it.photoUrl
+            Log.d("login", "email1: $email1")
+            // Check if user's email is verified
+            val emailVerified = it.isEmailVerified
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+            val uid = it.uid
+        }
     }
 
     private fun createSignInIntent() {
