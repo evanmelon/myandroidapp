@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAEBD7">
+    android:background="#FAEBD7"
+    >
 
     <!--上半部-->
     <androidx.cardview.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/userinfo"
         android:layout_width="375dp"
         android:layout_height="170dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="3dp">
-
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="3dp"
+        card_view:cardBackgroundColor="@color/white"
+        >
         <!--user name-->
         <TextView
             android:id="@+id/UserName"
@@ -24,7 +28,7 @@
             android:text="User name"
             android:textSize="25sp"
             android:textStyle="bold"
-            
+            android:elevation="2dp"
             >
         </TextView>
 
@@ -42,6 +46,7 @@
                 android:layout_height="20dp"
                 android:text="Posts"
                 android:gravity="center"
+                android:elevation="2dp"
                 >
             </TextView>
             <!--Followers-->
@@ -50,6 +55,7 @@
                 android:layout_height="20dp"
                 android:text="Followers"
                 android:gravity="center"
+                android:elevation="2dp"
                 >
             </TextView>
             <!--Following-->
@@ -58,6 +64,7 @@
                 android:layout_height="20dp"
                 android:text="Following"
                 android:gravity="center"
+                android:elevation="2dp"
                 >
             </TextView>
 
@@ -78,6 +85,7 @@
                 android:layout_height="20dp"
                 android:text="0"
                 android:gravity="center"
+                android:elevation="2dp"
                 >
             </TextView>
             <!--Followers num-->
@@ -87,6 +95,7 @@
                 android:layout_height="20dp"
                 android:text="0"
                 android:gravity="center"
+                android:elevation="2dp"
                 >
             </TextView>
             <!--Following num-->
@@ -96,9 +105,9 @@
                 android:layout_height="20dp"
                 android:text="0"
                 android:gravity="center"
+                android:elevation="2dp"
                 >
             </TextView>
-
         </LinearLayout>
 
         <!--個人簡介-->
@@ -111,6 +120,7 @@
             android:layout_marginLeft="15dp"
             android:text=" "
             android:textSize="10sp"
+            android:elevation="2dp"
             >
         </TextView>
 
@@ -127,32 +137,25 @@
             android:textColor="#808080"
             >
         </Button>
-
-        </androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <!--下半部-->
     <ScrollView
-        android:layout_width="400dp"
-        android:layout_height="475dp"
-        android:layout_marginBottom="65dp"
-        android:layout_alignParentBottom="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/userinfo"
+        android:layout_marginTop="10dp">
+        
         <LinearLayout
+            android:id="@+id/postContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Post"
-                android:textSize="25sp"
-                android:layout_marginLeft="5dp"
-                />
-
-
+            android:orientation="vertical"
+            android:padding="8dp">
 
         </LinearLayout>
     </ScrollView>
+
 
     <Button
         android:id="@+id/map"

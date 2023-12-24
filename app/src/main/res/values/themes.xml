@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MyApplication" parent="@style/Theme.AppCompat.Light" />
+    <!-- Base application theme -->
+    <style name="Theme.MyApplication" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here -->
+        <item name="android:windowBackground">@android:color/white</item> <!-- 設置窗口背景為白色 -->
+        <item name="android:colorBackground">@android:color/white</item> <!-- 設置風格的背景為白色 -->
+        <item name="android:textColorPrimary">@android:color/black</item> <!-- 設置文字的主要顏色為黑色 -->
+        <!-- 可以添加其他相應的屬性設置 -->
+    </style>
 </resources>

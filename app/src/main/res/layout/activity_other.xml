@@ -7,15 +7,18 @@
 
     <!--上半部-->
     <androidx.cardview.widget.CardView
+        android:id="@+id/userinfoo"
         android:layout_width="375dp"
         android:layout_height="170dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         app:cardCornerRadius="10dp"
-        app:cardElevation="3dp">
+        app:cardElevation="3dp"
+        android:background="@color/white">
 
         <!--user name-->
         <TextView
+            android:id="@+id/OtherUser"
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:layout_marginLeft="20dp"
@@ -128,25 +131,21 @@
     </androidx.cardview.widget.CardView>
 
     <!--下半部-->
+
     <ScrollView
-        android:layout_width="400dp"
-        android:layout_height="525dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentBottom="true">
-        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/userinfoo"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:id="@+id/postContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:padding="10dp"
-            android:text="貼文~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            >
+            android:orientation="vertical"
+            android:padding="8dp">
 
-        </TextView>
-
+        </LinearLayout>
     </ScrollView>
 
     <Button

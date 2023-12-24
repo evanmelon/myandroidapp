@@ -3,12 +3,16 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/bjy_base_turntable_default_background_color</item>
+        <item name="colorPrimaryDark">@color/bjy_base_turntable_default_background_color</item>
+        <item name="colorAccent">@color/bjy_base_turntable_default_background_color</item>
     </style>
 
-    <style name="MySuperAppTheme"></style>
+    <style name="MySuperAppTheme">
+        <item name="android:windowBackground">@android:color/white</item> <!-- 設置窗口背景為白色 -->
+        <item name="android:colorBackground">@android:color/white</item> <!-- 設置風格的背景為白色 -->
+        <item name="android:textColorPrimary">@android:color/black</item> <!-- 設置文字的主要顏色為黑色 -->
+    </style>
 
     <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">#000000</item>

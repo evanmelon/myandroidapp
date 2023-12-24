@@ -1,17 +1,15 @@
 package com.example.myapplication
 
 import android.app.ActivityOptions
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.widget.Button
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.myapplication.models.Post
 import com.google.firebase.database.DataSnapshot
@@ -21,16 +19,14 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-
-class Personal: AppCompatActivity() {
+class Other : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var posts: TextView
-    private lateinit var userName: TextView
-
+    private lateinit var OtherUsername: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         database = Firebase.database.reference
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_personal)
+        setContentView(R.layout.activity_other)
         val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
         val userId = sharedPref.getString("USER_ID", null)
         val name = sharedPref.getString("NAME", null)
@@ -50,7 +46,7 @@ class Personal: AppCompatActivity() {
                     // 这里可以访问 post 的属性，如 post.title 和 post.body
 
                     // 動態新增貼文
-                    val cardView = CardView(this@Personal)
+                    val cardView = CardView(this@Other)
                     val layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         400
@@ -60,7 +56,7 @@ class Personal: AppCompatActivity() {
                     cardView.layoutParams = layoutParams
                     cardView.cardElevation = 5f
 
-                    val textView = TextView(this@Personal)
+                    val textView = TextView(this@Other)
                     val text = "Title: ${post.title}\nBody: ${post.body}"
                     textView.text = text
                     textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
@@ -80,13 +76,13 @@ class Personal: AppCompatActivity() {
             }
         })
 
-        userName = findViewById(R.id.UserName)
-        userName.text = name
+        OtherUsername = findViewById(R.id.OtherUser)
+        OtherUsername.text = name
 
-        val homeButton: Button = findViewById(R.id.homeButton)
-        homeButton.setOnClickListener {
+        val profileButton: Button = findViewById(R.id.profileButton)
+        profileButton.setOnClickListener {
 
-            val intent = Intent(this, Home::class.java)
+            val intent = Intent(this, Profile::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
         val mapButton: Button = findViewById(R.id.map)
@@ -94,31 +90,6 @@ class Personal: AppCompatActivity() {
 
             val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
-        }
-        // 新增貼文
-        val postButton: Button = findViewById(R.id.newpost)
-        postButton.setOnClickListener {
-
-            val intent = Intent(this, Newpost::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
-        }
-
-        // 使用者輸入個人簡介
-        val textmsg:TextView = findViewById(R.id.textmsg)
-        val editButton: Button = findViewById(R.id.Edit)
-        editButton.setOnClickListener {
-            val editText = EditText(this)
-            val dialog = AlertDialog.Builder(this)
-                .setTitle("輸入文字")
-                .setView(editText)
-                .setPositiveButton("確定") { _, _ ->
-                    val userInput = editText.text.toString()
-                    textmsg.text = userInput
-                }
-                .setNegativeButton("取消", null)
-                .create()
-
-            dialog.show()
         }
     }
 }
