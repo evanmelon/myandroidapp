@@ -14,6 +14,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.myapplication.models.Post
+import com.example.myapplication.models.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -26,6 +28,7 @@ class Personal: AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var posts: TextView
     private lateinit var userName: TextView
+    private lateinit var msg: TextView
     private lateinit var readWriteSnippets: ReadAndWriteSnippets
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,10 +40,9 @@ class Personal: AppCompatActivity() {
         val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
         val userId = sharedPref.getString("USER_ID", null)
         val name = sharedPref.getString("NAME", null)
-        val email = sharedPref.getString("EMAIL", null)
         val container = findViewById<LinearLayout>(R.id.postContainer)
         container.removeAllViews()
-        // 資料庫抓資料
+        // 資料庫抓post
         val userPostsRef = Firebase.database.reference.child("user-posts").child(userId.toString())
         userPostsRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -75,17 +77,29 @@ class Personal: AppCompatActivity() {
                     // 将CardView添加到容器中
                     container.addView(cardView)
                 }
-                // 处理帖子数量，例如更新UI
-
-                // 個人簡介
-
-
             }
-
             override fun onCancelled(databaseError: DatabaseError) {
                 // 处理错误
             }
         })
+        // 資料庫抓簡介
+        val userRef = Firebase.database.reference.child("users").child(userId.toString())
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot)
+            {
+                val promsgs = dataSnapshot.children.mapNotNull { it.getValue(User::class.java) }
+                promsgs.forEach{user ->
+
+                    msg = findViewById(R.id.MSG)
+                    msg.text = user.promsg.toString()
+                }
+
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 处理错误
+            }
+        })
+
 
         userName = findViewById(R.id.UserName)
         userName.text = name
@@ -125,8 +139,8 @@ class Personal: AppCompatActivity() {
                 }
                 .setNegativeButton("取消", null)
                 .create()
-            dialog.show()
+                dialog.show()
 
+            }
         }
-    }
 }

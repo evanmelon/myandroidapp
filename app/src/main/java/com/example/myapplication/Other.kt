@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.example.myapplication.models.Post
+import com.example.myapplication.models.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -23,7 +24,7 @@ class Other : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var posts: TextView
     private lateinit var OtherUsername: TextView
-    private lateinit var proMsg: TextView
+    private lateinit var msg: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         database = Firebase.database.reference
         super.onCreate(savedInstanceState)
@@ -75,6 +76,23 @@ class Other : AppCompatActivity() {
 
             }
 
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 处理错误
+            }
+        })
+
+        // 資料庫抓簡介
+        val userRef = Firebase.database.reference.child("users").child(userId.toString())
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot)
+            {
+                val promsgs = dataSnapshot.children.mapNotNull { it.getValue(User::class.java) }
+                promsgs.forEach{user ->
+                    msg = findViewById(R.id.MSG)
+                    msg.text = user.promsg.toString()
+                }
+
+            }
             override fun onCancelled(databaseError: DatabaseError) {
                 // 处理错误
             }

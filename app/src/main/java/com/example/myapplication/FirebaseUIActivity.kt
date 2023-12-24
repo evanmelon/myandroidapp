@@ -132,7 +132,7 @@ class FirebaseUIActivity : AppCompatActivity(){
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            readWriteSnippets.writeNewUser(userId = user?.uid.toString(), name = user?.displayName.toString(), email = user?.email.toString())
+            readWriteSnippets.writeNewUser(userId = user?.uid.toString(), name = user?.displayName.toString(), email = user?.email.toString(), postmsg = "")
             val intent = Intent(this, Personal::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
 

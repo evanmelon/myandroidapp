@@ -61,7 +61,6 @@ class Home : AppCompatActivity() {
                     container.addView(textview2)
                     // 将CardView添加到容器中
                     container.addView(cardView)
-
                 }
                 // 处理帖子数量，例如更新UI
             }
