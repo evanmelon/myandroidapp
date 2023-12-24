@@ -39,6 +39,7 @@ class Personal: AppCompatActivity() {
         setContentView(R.layout.activity_personal)
         val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
         val userId = sharedPref.getString("USER_ID", null)
+        val email = sharedPref.getString("EMAIL", null)
         val name = sharedPref.getString("NAME", null)
         val container = findViewById<LinearLayout>(R.id.postContainer)
         container.removeAllViews()
@@ -93,7 +94,6 @@ class Personal: AppCompatActivity() {
                     msg = findViewById(R.id.MSG)
                     msg.text = user.promsg.toString()
                 }
-
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 // 处理错误
@@ -140,6 +140,7 @@ class Personal: AppCompatActivity() {
                 .setNegativeButton("取消", null)
                 .create()
                 dialog.show()
+            readWriteSnippets.writeNewPro(userId = userId.toString(), username = name.toString(), email = email.toString(), promsg = editText.text.toString())
 
             }
         }

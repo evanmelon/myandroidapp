@@ -30,7 +30,7 @@ class ReadAndWriteSnippets {
 
     // [START rtdb_write_new_user]
     fun writeNewUser(userId: String, name: String, email: String, postmsg : String) {
-        val user = User(userId, name, email, postmsg)
+        val user = User(name, email, postmsg)
 
         database.child("users").child(userId).setValue(user)
     }
@@ -143,7 +143,7 @@ class ReadAndWriteSnippets {
     fun writeNewPro(userId: String, username: String, email: String, promsg : String) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
-        val key = database.child("User").push().key
+        val key = database.child("users").push().key
         if (key == null) {
             Log.w(TAG, "Couldn't get push key for posts")
             return
@@ -153,7 +153,7 @@ class ReadAndWriteSnippets {
         val userValues = user.toMap()
 
         val childUpdates = hashMapOf<String, Any>(
-            "/user/$key" to userValues,
+            "/users/$key" to userValues,
         )
 
         database.updateChildren(childUpdates)
