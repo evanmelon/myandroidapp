@@ -139,5 +139,5 @@ class ReadAndWriteSnippets {
         )
         database.updateChildren(updates)
     }
-    // [END post_stars_increment]
+
 }

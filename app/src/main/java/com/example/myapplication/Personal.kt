@@ -26,8 +26,11 @@ class Personal: AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var posts: TextView
     private lateinit var userName: TextView
+    private lateinit var readWriteSnippets: ReadAndWriteSnippets
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        readWriteSnippets = ReadAndWriteSnippets()
+        readWriteSnippets.initializeDbRef()
         database = Firebase.database.reference
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal)
@@ -35,7 +38,7 @@ class Personal: AppCompatActivity() {
         val userId = sharedPref.getString("USER_ID", null)
         val name = sharedPref.getString("NAME", null)
         val email = sharedPref.getString("EMAIL", null)
-        val container = findViewById<LinearLayout>(R.id.postContainer) // 假设你有一个包含CardView的LinearLayout，其ID为container
+        val container = findViewById<LinearLayout>(R.id.postContainer)
         container.removeAllViews()
         // 資料庫抓資料
         val userPostsRef = Firebase.database.reference.child("user-posts").child(userId.toString())
@@ -73,6 +76,10 @@ class Personal: AppCompatActivity() {
                     container.addView(cardView)
                 }
                 // 处理帖子数量，例如更新UI
+
+                // 個人簡介
+
+
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -104,7 +111,7 @@ class Personal: AppCompatActivity() {
         }
 
         // 使用者輸入個人簡介
-        val textmsg:TextView = findViewById(R.id.textmsg)
+        val textmsg:TextView = findViewById(R.id.MSG)
         val editButton: Button = findViewById(R.id.Edit)
         editButton.setOnClickListener {
             val editText = EditText(this)
@@ -114,11 +121,12 @@ class Personal: AppCompatActivity() {
                 .setPositiveButton("確定") { _, _ ->
                     val userInput = editText.text.toString()
                     textmsg.text = userInput
+
                 }
                 .setNegativeButton("取消", null)
                 .create()
-
             dialog.show()
+
         }
     }
 }

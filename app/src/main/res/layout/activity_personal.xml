@@ -112,7 +112,7 @@
 
         <!--個人簡介-->
         <TextView
-            android:id="@+id/textmsg"
+            android:id="@+id/MSG"
             android:layout_width="180dp"
             android:layout_height="80dp"
             android:layout_gravity="bottom"

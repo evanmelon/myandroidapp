@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.Exclude
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.getValue
 
@@ -33,6 +34,22 @@ data class Post(
         result["body"] = body
         return result
     }
+}
+data class Profilemsg(
+    var uid: String? = "",
+    var author: String? = "",
+    var content : String? = ""
+) {
+
+    // [START post_to_map]
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "uid" to uid,
+            "author" to author,
+            "content" to content
+        )
+    }
+    // [END post_to_map]
 }
 
 class UserData {
@@ -112,6 +129,26 @@ class UserData {
 
         val post = Post(userId, username, title, body)
         val postValues = post.toMap()
+
+        val childUpdates = hashMapOf<String, Any>(
+            "/posts/$key" to postValues,
+            "/user-posts/$userId/$key" to postValues,
+        )
+
+        database.updateChildren(childUpdates)
+    }
+
+    public fun writeNewPro(userId: String, username: String, content: String) {
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        val key = database.child("posts").push().key
+        if (key == null) {
+            Log.w(TAG, "Couldn't get push key for posts")
+            return
+        }
+
+        val pro = Profilemsg(userId, username, content)
+        val postValues = pro.toMap()
 
         val childUpdates = hashMapOf<String, Any>(
             "/posts/$key" to postValues,

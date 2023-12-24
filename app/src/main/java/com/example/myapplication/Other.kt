@@ -23,6 +23,7 @@ class Other : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var posts: TextView
     private lateinit var OtherUsername: TextView
+    private lateinit var proMsg: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         database = Firebase.database.reference
         super.onCreate(savedInstanceState)
@@ -69,6 +70,9 @@ class Other : AppCompatActivity() {
                     container.addView(cardView)
                 }
                 // 处理帖子数量，例如更新UI
+
+                // 個人簡介
+
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
