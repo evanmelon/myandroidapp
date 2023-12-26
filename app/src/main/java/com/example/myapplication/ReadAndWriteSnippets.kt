@@ -30,14 +30,14 @@ class ReadAndWriteSnippets {
 
     // [START rtdb_write_new_user]
     fun writeNewUser(userId: String, name: String, email: String, postmsg : String) {
-        val user = User(name, email, postmsg)
+        val user = User(username = name, email = email, promsg = postmsg)
 
         database.child("users").child(userId).setValue(user)
     }
     // [END rtdb_write_new_user]
 
-    fun writeNewUserWithTaskListeners(userId: String, name: String, email: String) {
-        val user = User(name, email)
+    fun writeNewUserWithTaskListeners(userId: String, name: String, email: String, postmsg : String) {
+        val user = User(username = name,email = email,promsg = postmsg)
 
         // [START rtdb_write_new_user_task]
         database.child("users").child(userId).setValue(user)
@@ -149,7 +149,7 @@ class ReadAndWriteSnippets {
             return
         }
 
-        val user = User(userId, username, email, promsg)
+        val user = User(username, email, promsg)
         val userValues = user.toMap()
 
         val childUpdates = hashMapOf<String, Any>(

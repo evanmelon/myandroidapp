@@ -125,8 +125,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         }
         val profileButton: Button = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
-            val intent = Intent(this, Profile::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+            val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+            if (sharedPref != null) {
+                val intent = Intent(this, Personal::class.java)
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+            } else {
+                // key不存在，执行相应的逻辑
+                val intent = Intent(this, FirebaseUIActivity::class.java)
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+            }
+
 
 //            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
         }
@@ -140,6 +148,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
 //            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
         }
     }
+
     // [END maps_current_place_on_create]
 
     /**
@@ -477,7 +486,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
             Place.Field.PRICE_LEVEL,
             Place.Field.SERVES_VEGETARIAN_FOOD,
             Place.Field.EDITORIAL_SUMMARY,
-            Place.Field.RATING
+            Place.Field.RATING ,
+            Place.Field.PHONE_NUMBER
         )
         // Define latitude and longitude coordinates of the search area.
 
@@ -527,7 +537,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
                 .addOnSuccessListener { response ->
                     val places: List<Place> = response.places
                     Log.d("places", "place ${places.size}")
-
+                    showOptionsDialog(places)
                     for (place in places) {
                         val placeId = place.id
                         val placeName = place.name
@@ -536,6 +546,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
                         val placeRating = place.rating
 
                         val spotLatLng = place.latLng
+                        val current_opening_h = place.currentOpeningHours
+                        val price_level = place.priceLevel
+                        val serves_veg = place.servesVegetarianFood
+                        val phone_number = place.phoneNumber
 
                         GlobalScope.launch(Dispatchers.IO) {
                             try {
@@ -550,7 +564,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
                                         current_opening_hours = place.currentOpeningHours,
                                         serves_vegentarian_food = place.servesVegetarianFood,
                                         editorial_summary = place.editorialSummary,
-                                        ratting = place.rating
+                                        ratting = place.rating,
+                                        price_level = place.priceLevel,
+                                        phone_number = place.phoneNumber
                                         )
                                     val spot = map?.addMarker(
                                         MarkerOptions()
@@ -581,6 +597,47 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
                 }
         }
     }
+    fun showOptionsDialog(places: List<Place>) {
+        val options = places.map { it.name }.toTypedArray()
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Select a place")
+            .setItems(options) { _, which ->
+                handleSelectedPlace(places[which])
+            }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+    fun handleSelectedPlace(selectedPlace: Place) {
+        val dialogView = layoutInflater.inflate(R.layout.button_sheet, null)
+        val dialog = BottomSheetDialog(this)
+        dialog.setContentView(dialogView)
+        val tvStoreName: TextView = dialogView.findViewById(R.id.tvStoreName)
+        val tvBusinessHours: TextView = dialogView.findViewById(R.id.tvBusinessHours)
+        val tvDescription: TextView = dialogView.findViewById(R.id.tvDescription)
+        val markerData = MarkerData(
+            id = selectedPlace.id,
+            name = selectedPlace.name,
+            address = selectedPlace.address,
+            current_opening_hours = selectedPlace.currentOpeningHours,
+            serves_vegentarian_food = selectedPlace.servesVegetarianFood,
+            editorial_summary = selectedPlace.editorialSummary,
+            ratting = selectedPlace.rating,
+            price_level = selectedPlace.priceLevel,
+            phone_number = selectedPlace.phoneNumber
+        )
+
+        // 现在可以使用 markerData 中的信息了
+        tvStoreName.text = markerData?.name
+
+//        tvBusinessHours.text = markerData?.current_opening_hours?.periods.toString()
+
+        tvDescription.text = markerData?.editorial_summary
+
+
+        dialog.show()
+    }
     class MarkerData(
         val id: String?,
         val name: String?,
@@ -588,7 +645,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         val current_opening_hours: OpeningHours?,
         val serves_vegentarian_food: BooleanPlaceAttributeValue?,
         val editorial_summary: String?,
-        val ratting: Double?
+        val ratting: Double?,
+        val price_level: Int?,
+        val phone_number: String?
         )
     override fun onInfoWindowClick(marker: Marker) {
         val dialogView = layoutInflater.inflate(R.layout.button_sheet, null)

@@ -16,6 +16,7 @@ import androidx.cardview.widget.CardView
 import com.example.myapplication.models.Post
 import com.example.myapplication.models.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -30,17 +31,20 @@ class Personal: AppCompatActivity() {
     private lateinit var userName: TextView
     private lateinit var msg: TextView
     private lateinit var readWriteSnippets: ReadAndWriteSnippets
-
+    private lateinit var sharedPref: android.content.SharedPreferences
+    private var userId: String? = null
+    private var email: String? = null
+    private var name: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         readWriteSnippets = ReadAndWriteSnippets()
         readWriteSnippets.initializeDbRef()
         database = Firebase.database.reference
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal)
-        val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-        val userId = sharedPref.getString("USER_ID", null)
-        val email = sharedPref.getString("EMAIL", null)
-        val name = sharedPref.getString("NAME", null)
+        sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+        userId = sharedPref.getString("USER_ID", null)
+        email = sharedPref.getString("EMAIL", null)
+        name = sharedPref.getString("NAME", null)
         val container = findViewById<LinearLayout>(R.id.postContainer)
         container.removeAllViews()
         // 資料庫抓post
@@ -83,22 +87,22 @@ class Personal: AppCompatActivity() {
                 // 处理错误
             }
         })
-        // 資料庫抓簡介
-        val userRef = Firebase.database.reference.child("users").child(userId.toString())
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot)
-            {
-                val promsgs = dataSnapshot.children.mapNotNull { it.getValue(User::class.java) }
-                promsgs.forEach{user ->
-
-                    msg = findViewById(R.id.MSG)
-                    msg.text = user.promsg.toString()
-                }
-            }
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 处理错误
-            }
-        })
+//        // 資料庫抓簡介
+//        val userRef = Firebase.database.reference.child("users").child(userId.toString())
+//        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot)
+//            {
+//                val promsgs = dataSnapshot.children.mapNotNull { it.getValue(User::class.java) }
+//                promsgs.forEach{user ->
+//
+//                    msg = findViewById(R.id.MSG)
+//                    msg.text = user.promsg.toString()
+//                }
+//            }
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                // 处理错误
+//            }
+//        })
 
 
         userName = findViewById(R.id.UserName)
@@ -123,7 +127,16 @@ class Personal: AppCompatActivity() {
             val intent = Intent(this, Newpost::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
-
+        val logoutButton: Button = findViewById(R.id.Logout)
+        logoutButton.setOnClickListener {
+            Firebase.auth.signOut()
+            val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            editor.remove("MyApp")
+            editor.apply()
+            val intent = Intent(this, FirebaseUIActivity::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+        }
         // 使用者輸入個人簡介
         val textmsg:TextView = findViewById(R.id.MSG)
         val editButton: Button = findViewById(R.id.Edit)
@@ -140,8 +153,22 @@ class Personal: AppCompatActivity() {
                 .setNegativeButton("取消", null)
                 .create()
                 dialog.show()
-            readWriteSnippets.writeNewPro(userId = userId.toString(), username = name.toString(), email = email.toString(), promsg = editText.text.toString())
+            database.child("users").child(userId.toString()).child("promsg").setValue(editText.text.toString())
+//            readWriteSnippets.writeNewPro(userId = userId.toString(), username = name.toString(), email = email.toString(), promsg = editText.text.toString())
 
             }
         }
+    override fun onStart() {
+        super.onStart()
+        sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+        userId = sharedPref.getString("USER_ID", null)
+        email = sharedPref.getString("EMAIL", null)
+        name = sharedPref.getString("NAME", null)
+        Log.d("personal", "name: $name")
+        userName = findViewById(R.id.UserName)
+        userName.text = name
+        // 在这里执行一些在 Activity 开始变得对用户可见时需要进行的操作
+
+        // 例如，可以在这里处理一些 UI 更新、初始化数据等操作
+    }
 }

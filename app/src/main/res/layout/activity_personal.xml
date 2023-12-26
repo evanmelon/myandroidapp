@@ -125,12 +125,25 @@
         </TextView>
 
         <Button
-            android:id="@+id/Edit"
+            android:id="@+id/Logout"
             android:layout_width="65dp"
             android:layout_height="20dp"
             android:layout_gravity="end"
             android:layout_marginTop="130dp"
             android:layout_marginRight="20dp"
+            android:background="@drawable/button_background3"
+            android:text="Logout"
+            android:textSize="12dp"
+            android:textColor="#808080"
+            >
+        </Button>
+        <Button
+            android:id="@+id/Edit"
+            android:layout_width="65dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="130dp"
+            android:layout_marginRight="100dp"
             android:background="@drawable/button_background3"
             android:text="Edit"
             android:textSize="12dp"
