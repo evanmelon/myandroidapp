@@ -14,8 +14,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.myapplication.models.Post
-import com.example.myapplication.models.User
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -107,7 +105,17 @@ class Personal: AppCompatActivity() {
 
         userName = findViewById(R.id.UserName)
         userName.text = name
+        Log.i("firebase", "userid: ${userId.toString()}")
+        database.child("users").child(userId.toString()).get().addOnSuccessListener {
+            Log.i("firebase", "Got value ${it.value}")
+            val dataSnapshotMap = it.value as Map<String, Any>
+            msg = findViewById(R.id.MSG)
+            msg.text = dataSnapshotMap["promsg"] as String
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
 
+//        msg.text =
         val homeButton: Button = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {
 
@@ -148,12 +156,13 @@ class Personal: AppCompatActivity() {
                 .setPositiveButton("確定") { _, _ ->
                     val userInput = editText.text.toString()
                     textmsg.text = userInput
-
+                    database.child("users").child(userId.toString()).child("promsg").setValue(textmsg.text)
+                    Log.d("msg", "set msg to $textmsg.text")
                 }
                 .setNegativeButton("取消", null)
                 .create()
                 dialog.show()
-            database.child("users").child(userId.toString()).child("promsg").setValue(editText.text.toString())
+
 //            readWriteSnippets.writeNewPro(userId = userId.toString(), username = name.toString(), email = email.toString(), promsg = editText.text.toString())
 
             }

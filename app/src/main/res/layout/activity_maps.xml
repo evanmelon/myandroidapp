@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="16dp"
-        android:hint="Enter location"
+        android:hint="What do you want?"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:maxLines="1"
@@ -61,9 +61,9 @@
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="0dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:text="Spin"
         android:background="@drawable/spin_icon" />
 

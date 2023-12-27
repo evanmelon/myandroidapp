@@ -25,7 +25,19 @@
             android:maxLines="1"
             android:singleLine="true"
             android:background="@drawable/edittext_border"/>
-
+        <Button
+            android:id="@+id/addRestaurant"
+            android:layout_width="65dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_background3"
+            android:text="Add"
+            android:textSize="12dp"
+            android:textColor="#808080"
+            >
+        </Button>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"

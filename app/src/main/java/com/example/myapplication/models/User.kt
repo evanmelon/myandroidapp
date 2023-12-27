@@ -8,7 +8,8 @@ import com.google.firebase.database.IgnoreExtraProperties
 data class User(
     val username: String? = null,
     val email: String? = null,
-    val promsg: String? = null
+    val promsg: String? = null,
+    val likePlaceIds: List<String>? = null
 
 ) {
     @Exclude
@@ -16,7 +17,8 @@ data class User(
         return mapOf(
             "username" to username,
             "email" to email,
-            "promsg" to promsg
+            "promsg" to promsg,
+            "likePlaceIds" to likePlaceIds
         )
     }
     // [END post_to_map]

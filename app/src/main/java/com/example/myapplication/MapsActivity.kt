@@ -11,8 +11,6 @@ import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -26,9 +24,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.myapplication.models.User
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -50,6 +48,13 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.api.net.SearchByTextRequest
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import java.net.URL
 
@@ -58,8 +63,10 @@ import java.net.URL
  */
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private var map: GoogleMap? = null
-    private var cameraPosition: CameraPosition? = null
+    private lateinit var database: DatabaseReference
 
+    private var cameraPosition: CameraPosition? = null
+    private lateinit var sharedPref: android.content.SharedPreferences
     // The entry point to the Places API.
     private lateinit var placesClient: PlacesClient
 
@@ -82,10 +89,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
     private val mapUpdateDelayMillis = 500L // 5 seconds delay
     private var zoomLevel: Float = 15f
     var userLatLng: LatLng = LatLng(121.0, 25.0)
+    private var userId: String? = null
     // [START maps_current_place_on_create]
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        database = Firebase.database.reference
         // [START_EXCLUDE silent]
         // Retrieve location and camera position from saved instance state.
         // [START maps_current_place_on_create_save_instance_state]
@@ -126,15 +134,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         val profileButton: Button = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
             val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-            if (sharedPref != null) {
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user != null) {
+                // 用户已登录
+                Log.d("login", "user login")
                 val intent = Intent(this, Personal::class.java)
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
             } else {
-                // key不存在，执行相应的逻辑
+                // 用户未登录
+                Log.d("login", "user not login")
                 val intent = Intent(this, FirebaseUIActivity::class.java)
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
             }
 
+//            if (sharedPref != null) {
+//                val intent = Intent(this, Personal::class.java)
+//                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+//            } else {
+//                // key不存在，执行相应的逻辑
+//                val intent = Intent(this, FirebaseUIActivity::class.java)
+//                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+//            }
 
 //            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
         }
@@ -645,6 +665,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
 
         likebutton.setOnClickListener {
             Log.d("like", " ${markerData.name}")
+            sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+            userId = sharedPref.getString("USER_ID", null)
+            val userRef = database.child("users").child(userId.toString())
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val user = dataSnapshot.getValue(User::class.java)
+                    user?.let {
+                        // 更新 placeIds 列表
+                        val updatedPlaceIds = it.likePlaceIds?.toMutableList() ?: mutableListOf()
+                        updatedPlaceIds.add(markerData.id.toString())
+
+                        // 将更新后的对象写回数据库
+                        userRef.updateChildren(mapOf("likePlaceIds" to updatedPlaceIds))
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // 处理错误
+                }
+            })
+            Toast.makeText(
+                this, "${markerData.name} 加入Likes",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
     class MarkerData(

@@ -140,23 +140,23 @@ class ReadAndWriteSnippets {
         database.updateChildren(updates)
     }
 
-    fun writeNewPro(userId: String, username: String, email: String, promsg : String) {
+    fun writeNewPro(userId: String, promsg : String) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
-        val key = database.child("users").push().key
-        if (key == null) {
-            Log.w(TAG, "Couldn't get push key for posts")
-            return
-        }
-
-        val user = User(username, email, promsg)
-        val userValues = user.toMap()
-
-        val childUpdates = hashMapOf<String, Any>(
-            "/users/$key" to userValues,
-        )
-
-        database.updateChildren(childUpdates)
+//        val key = database.child("users").push().key
+//        if (key == null) {
+//            Log.w(TAG, "Couldn't get push key for posts")
+//            return
+//        }
+//
+//        val user = User(username, email, promsg)
+//        val userValues = user.toMap()
+//
+//        val childUpdates = hashMapOf<String, Any>(
+//            "/users/$key" to userValues,
+//        )
+        database.child("users").child(userId).child("promsg").setValue(promsg)
+//        database.updateChildren(childUpdates)
     }
 
 }
