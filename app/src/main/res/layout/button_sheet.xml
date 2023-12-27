@@ -24,30 +24,101 @@
                 android:id="@+id/tvStoreName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="商家名称"
+                android:text="商家名稱"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:padding="8dp" />
 
-            <!-- 營業时间 -->
-            <TextView
-                android:id="@+id/tvBusinessHours"
+            <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="營業時間：9:00 - 18:00"
-                android:textSize="18sp"
-                android:padding="8dp" />
+                android:columnCount="2"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
 
-            <!-- 敘述和資料 -->
-            <TextView
-                android:id="@+id/tvDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="这里是商家描述和其他相关信息。"
-                android:textSize="16sp"
-                android:padding="8dp" />
 
-            <!-- 可添加更多视图元素，如图片、评分等 -->
+                <!-- 店家地址 -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:text="商家地址"
+                    android:textSize="18sp"
+                    android:padding="8dp" />
+                <TextView
+                    android:id="@+id/tvStoreAddr"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="2.5"
+                    android:textSize="18sp"
+                    android:padding="8dp" />
+
+
+                <!-- 電話 -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:text="電話"
+                    android:textSize="16sp"
+                    android:padding="8dp" />
+                <TextView
+                    android:id="@+id/tvPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:textSize="16sp"
+                    android:padding="8dp" />
+
+                <!-- 評分 -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:text="評分"
+                    android:textSize="16sp"
+                    android:padding="8dp" />
+                <TextView
+                    android:id="@+id/tvRating"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:textSize="16sp"
+                    android:padding="8dp" />
+
+                <!-- 價位 -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:text="價位"
+                    android:textSize="16sp"
+                    android:padding="8dp" />
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:textSize="16sp"
+                    android:padding="8dp" />
+
+                <!-- 敘述和資料 -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:text="敘述和資料"
+                    android:textSize="16sp"
+                    android:padding="8dp" />
+                <TextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:textSize="16sp"
+                    android:padding="8dp" />
+
+            </GridLayout>
 
         </LinearLayout>
     </ScrollView>

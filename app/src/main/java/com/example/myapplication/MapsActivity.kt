@@ -614,7 +614,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         val dialog = BottomSheetDialog(this)
         dialog.setContentView(dialogView)
         val tvStoreName: TextView = dialogView.findViewById(R.id.tvStoreName)
-        val tvBusinessHours: TextView = dialogView.findViewById(R.id.tvBusinessHours)
+        val tvStoreAddr: TextView = dialogView.findViewById(R.id.tvStoreAddr)
+        val tvPhone: TextView = dialogView.findViewById(R.id.tvPhone)
+        val tvRating: TextView = dialogView.findViewById(R.id.tvRating)
+        val tvPrice: TextView = dialogView.findViewById(R.id.tvPrice)
         val tvDescription: TextView = dialogView.findViewById(R.id.tvDescription)
         val markerData = MarkerData(
             id = selectedPlace.id,
@@ -630,9 +633,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
 
         // 现在可以使用 markerData 中的信息了
         tvStoreName.text = markerData?.name
-
-//        tvBusinessHours.text = markerData?.current_opening_hours?.periods.toString()
-
+        tvStoreAddr.text = markerData?.address
+        tvPhone.text = markerData?.phone_number
+        tvRating.text = markerData?.ratting.toString()
+        tvPrice.text = markerData?.price_level.toString()
         tvDescription.text = markerData?.editorial_summary
 
 
@@ -654,15 +658,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         val dialog = BottomSheetDialog(this)
         dialog.setContentView(dialogView)
         val tvStoreName: TextView = dialogView.findViewById(R.id.tvStoreName)
-        val tvBusinessHours: TextView = dialogView.findViewById(R.id.tvBusinessHours)
+        val tvStoreAddr: TextView = dialogView.findViewById(R.id.tvStoreAddr)
+        val tvPhone: TextView = dialogView.findViewById(R.id.tvPhone)
+        val tvRating: TextView = dialogView.findViewById(R.id.tvRating)
+        val tvPrice: TextView = dialogView.findViewById(R.id.tvPrice)
         val tvDescription: TextView = dialogView.findViewById(R.id.tvDescription)
         val markerData = marker.tag as? MarkerData
 
         // 现在可以使用 markerData 中的信息了
         tvStoreName.text = markerData?.name
-
-//        tvBusinessHours.text = markerData?.current_opening_hours?.periods.toString()
-
+        tvStoreAddr.text = markerData?.address
+        tvPhone.text = markerData?.phone_number
+        tvRating.text = markerData?.ratting.toString()
+        tvPrice.text = markerData?.price_level.toString()
         tvDescription.text = markerData?.editorial_summary
 
 
