@@ -619,6 +619,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         val tvRating: TextView = dialogView.findViewById(R.id.tvRating)
         val tvPrice: TextView = dialogView.findViewById(R.id.tvPrice)
         val tvDescription: TextView = dialogView.findViewById(R.id.tvDescription)
+        val likebutton: Button = dialogView.findViewById(R.id.like)
         val markerData = MarkerData(
             id = selectedPlace.id,
             name = selectedPlace.name,
@@ -641,6 +642,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
 
 
         dialog.show()
+
+        likebutton.setOnClickListener {
+            Log.d("like", " ${markerData.name}")
+        }
     }
     class MarkerData(
         val id: String?,
