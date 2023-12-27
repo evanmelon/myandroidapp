@@ -119,10 +119,23 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="15dp"
             android:text=" "
-            android:textSize="10sp"
+            android:textSize="14sp"
             android:elevation="2dp"
             >
         </TextView>
+
+        <ImageButton
+            android:id="@+id/Likelist"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="20dp"
+            android:textSize="12dp"
+            android:textColor="#808080"
+            android:background="@drawable/like"
+            >
+        </ImageButton>
 
         <Button
             android:id="@+id/Logout"

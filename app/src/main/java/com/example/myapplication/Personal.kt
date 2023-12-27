@@ -9,6 +9,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -143,6 +144,12 @@ class Personal: AppCompatActivity() {
             editor.remove("MyApp")
             editor.apply()
             val intent = Intent(this, FirebaseUIActivity::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+        }
+        val likeButton: ImageView = findViewById(R.id.Likelist)
+        likeButton.setOnClickListener {
+
+            val intent = Intent(this, FavoriteList::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
         // 使用者輸入個人簡介

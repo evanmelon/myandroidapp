@@ -140,7 +140,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
                 Log.d("login", "user login")
                 val intent = Intent(this, Personal::class.java)
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
-            } else {
+
+            }
+            else {
                 // 用户未登录
                 Log.d("login", "user not login")
                 val intent = Intent(this, FirebaseUIActivity::class.java)
