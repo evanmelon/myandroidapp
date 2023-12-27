@@ -53,11 +53,17 @@ class Home : AppCompatActivity() {
 
                     // 作者
                     val textview2 = TextView(this@Home)
+                    textview2.isClickable = true
+                    textview2.isFocusable = true
                     val text2 = "${post.author}"
                     textview2.text = text2
                     textview2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
                     textview2.setPadding(16, 16, 16, 16)
-
+                    textview2.setOnClickListener{
+                        val intent = Intent(this@Home, Other::class.java)
+                        intent.putExtra("otherID", post.uid)
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@Home).toBundle())
+                    }
                     container.addView(textview2)
                     // 将CardView添加到容器中
                     container.addView(cardView)
@@ -74,7 +80,7 @@ class Home : AppCompatActivity() {
         val proButton: Button = findViewById(R.id.profileButton)
         proButton.setOnClickListener {
 
-            val intent = Intent(this, Profile::class.java)
+            val intent = Intent(this, Personal::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
         val mapButton: Button = findViewById(R.id.map)

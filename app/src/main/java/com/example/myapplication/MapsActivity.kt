@@ -675,9 +675,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
                     val user = dataSnapshot.getValue(User::class.java)
                     user?.let {
                         // 更新 placeIds 列表
+
                         val updatedPlaceIds = it.likePlaceIds?.toMutableList() ?: mutableListOf()
                         updatedPlaceIds.add(markerData.id.toString())
-
+//                        val updatedPlaceInfos = it.likePlaceInfos?.toMutableList() ?: mutableListOf<PlaceInfo>()
+//                        updatedPlaceInfos.add(PlaceInfo(markerData.id.toString(), null, null))
                         // 将更新后的对象写回数据库
                         userRef.updateChildren(mapOf("likePlaceIds" to updatedPlaceIds))
                     }
@@ -715,6 +717,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         val tvPrice: TextView = dialogView.findViewById(R.id.tvPrice)
         val tvDescription: TextView = dialogView.findViewById(R.id.tvDescription)
         val markerData = marker.tag as? MarkerData
+        val likebutton: Button = dialogView.findViewById(R.id.like)
 
         // 现在可以使用 markerData 中的信息了
         tvStoreName.text = markerData?.name
@@ -726,10 +729,37 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
 
 
         dialog.show()
-        Toast.makeText(
-            this, "${marker.snippet}",
-            Toast.LENGTH_SHORT
-        ).show()
+        likebutton.setOnClickListener {
+            Log.d("like", " ${markerData?.name}")
+            sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+            userId = sharedPref.getString("USER_ID", null)
+            val userRef = database.child("users").child(userId.toString())
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val user = dataSnapshot.getValue(User::class.java)
+                    user?.let {
+                        // 更新 placeIds 列表
+//                        val updatedPlaceInfos = it.likePlaceInfos?.toMutableList() ?: mutableListOf<PlaceInfo>()
+//                        updatedPlaceInfos.add(PlaceInfo(markerData?.id.toString(), null, null))
+
+                        val updatedPlaceIds = it.likePlaceIds?.toMutableList() ?: mutableListOf()
+                        updatedPlaceIds.add(markerData?.id.toString())
+
+                        // 将更新后的对象写回数据库
+                        userRef.updateChildren(mapOf("likePlaceIds" to updatedPlaceIds))
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // 处理错误
+                }
+            })
+            Toast.makeText(
+                this, "${markerData?.name} 加入Likes",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
     }
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.

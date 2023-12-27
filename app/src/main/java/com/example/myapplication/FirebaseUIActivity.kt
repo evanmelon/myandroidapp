@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.AuthUI.IdpConfig
@@ -17,11 +18,6 @@ import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 
 //import com.google.firebase.quickstart.auth.R
@@ -58,15 +54,44 @@ class FirebaseUIActivity : AppCompatActivity(){
         val password: EditText = findViewById(R.id.editTextPassword)
         Log.d("login", "hi")
         buttonSignIn.setOnClickListener {
-            Log.d("login", "button click")
-            CoroutineScope(Dispatchers.IO).launch{
-                Log.d("login", "hi1")
-                login(account.text.toString(), password.text.toString())
-                withContext(Dispatchers.Main) {
-                    val intent = Intent(this@FirebaseUIActivity, Personal::class.java)
-                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@FirebaseUIActivity).toBundle())
+//            Log.d("login", "button click")
+//            CoroutineScope(Dispatchers.IO).launch{
+//                Log.d("login", "hi1")
+//                login(account.text.toString(), password.text.toString())
+//
+//                withContext(Dispatchers.Main) {
+//                    val intent = Intent(this@FirebaseUIActivity, Personal::class.java)
+//                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@FirebaseUIActivity).toBundle())
+//                }
+//            }
+            Firebase.auth.signInWithEmailAndPassword(account.text.toString(), password.text.toString())
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("login", "signInWithEmail:success")
+                        val user = Firebase.auth.currentUser
+                        user?.let {
+                            Log.d("login", "user login2")
+                            val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+                            with (sharedPref.edit()) {
+                                putString("USER_ID", it.uid)
+                                putString("NAME", it.displayName)
+                                putString("EMAIL", it.email)
+                                apply()
+                            }
+                        }
+                        val intent = Intent(this@FirebaseUIActivity, Personal::class.java)
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@FirebaseUIActivity).toBundle())
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("login", "signInWithEmail:failure", task.exception)
+                        Toast.makeText(
+                            baseContext,
+                            "Authentication failed.",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
                 }
-            }
 
         }
         buttonSignUp.setOnClickListener {
@@ -79,40 +104,33 @@ class FirebaseUIActivity : AppCompatActivity(){
 
     private suspend fun login(email: String, password: String){
         Log.d("login", "email: $email, password: $password")
-        Firebase.auth.signInWithEmailAndPassword(email, password).await()
-        Log.d("login", "user login1")
-        val user = Firebase.auth.currentUser
-        user?.let {
-            Log.d("login", "user login2")
-//            this.dataStore.edit { settings ->
-//                val currentCounterValue = settings[EXAMPLE_COUNTER] ?: 0
-//                settings[EXAMPLE_COUNTER] = currentCounterValue + 1
-//            }
-//            data.saveUserData(data, it.uid, it.displayName.toString(), it.email.toString())
-            // Name, email address, and profile photo Url
-            val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-            with (sharedPref.edit()) {
-                putString("USER_ID", it.uid)
-                putString("NAME", it.displayName)
-                putString("EMAIL", it.email)
-                apply()
+        Firebase.auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("login", "signInWithEmail:success")
+                    val user = Firebase.auth.currentUser
+                    user?.let {
+                        Log.d("login", "user login2")
+                        val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+                        with (sharedPref.edit()) {
+                            putString("USER_ID", it.uid)
+                            putString("NAME", it.displayName)
+                            putString("EMAIL", it.email)
+                            apply()
+                        }
+                    }
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("login", "signInWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
             }
-            val name = it.displayName
-            val email1 = it.email
-            val photoUrl = it.photoUrl
-            Log.d("login", "email1: $email1")
-            Log.d("login", "name: $name")
 
-
-            // Check if user's email is verified
-            val emailVerified = it.isEmailVerified
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
-            val uid = it.uid
-
-        }
     }
 
     private fun createSignInIntent() {
@@ -141,9 +159,18 @@ class FirebaseUIActivity : AppCompatActivity(){
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
+            val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+            user?.let {
+                with (sharedPref.edit()) {
+                    putString("USER_ID", it.uid)
+                    putString("NAME", it.displayName)
+                    putString("EMAIL", it.email)
+                    apply()
+                }
+            }
             readWriteSnippets.writeNewUser(userId = user?.uid.toString(), name = user?.displayName.toString(), email = user?.email.toString(), postmsg = "")
-            val intent = Intent(this, Personal::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+//            val intent = Intent(this@FirebaseUIActivity, Personal::class.java)
+//            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
 
         } else {
             // Sign in failed. If response is null the user canceled the

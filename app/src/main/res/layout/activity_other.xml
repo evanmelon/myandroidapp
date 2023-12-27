@@ -116,7 +116,7 @@
         </TextView>
 
         <Button
-            android:id="@+id/Edit"
+            android:id="@+id/followButton"
             android:layout_width="65dp"
             android:layout_height="20dp"
             android:layout_gravity="end"

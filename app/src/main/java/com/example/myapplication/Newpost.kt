@@ -52,6 +52,8 @@ class Newpost : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val user = dataSnapshot.getValue(User::class.java)
 //                    val options = user?.likePlaceIds?.toTypedArray()
+//                    val likePlaceInfos = user?.likePlaceInfos?.toList()
+//                    val placeIds: List<String?> = likePlaceInfos?.map { it.placeId } ?: emptyList()
                     val placeIds = user?.likePlaceIds?.toList()
                     val placeFields = listOf(Place.Field.ID, Place.Field.NAME)
                     val options = mutableListOf<String>()
@@ -85,7 +87,7 @@ class Newpost : AppCompatActivity() {
             })
         }
     }
-    fun showAlertDialog(options: List<String>, placeIds: List<String>, placeFields: List<Place.Field>) {
+    fun showAlertDialog(options: List<String>, placeIds: List<String?>, placeFields: List<Place.Field>) {
         val builder = AlertDialog.Builder(this@Newpost)
         builder.setTitle("Select a place")
             .setItems(options.toTypedArray()) { _, which ->

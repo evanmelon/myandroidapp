@@ -3,16 +3,15 @@ package com.example.myapplication
 import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.myapplication.models.Post
-import com.example.myapplication.models.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -23,11 +22,13 @@ import com.google.firebase.ktx.Firebase
 class Other : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var posts: TextView
-    private lateinit var OtherUsername: TextView
+    private lateinit var otherUsername: TextView
     private lateinit var msg: TextView
+    private var otherUserID: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         database = Firebase.database.reference
         super.onCreate(savedInstanceState)
+        otherUserID = intent.getStringExtra("otherID")
         setContentView(R.layout.activity_other)
         val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
         val userId = sharedPref.getString("USER_ID", null)
@@ -36,7 +37,7 @@ class Other : AppCompatActivity() {
         val container = findViewById<LinearLayout>(R.id.postContainer) // 假设你有一个包含CardView的LinearLayout，其ID为container
         container.removeAllViews()
         // 資料庫抓資料
-        val userPostsRef = Firebase.database.reference.child("user-posts").child(userId.toString())
+        val userPostsRef = Firebase.database.reference.child("user-posts").child(otherUserID.toString())
         userPostsRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 posts = findViewById(R.id.posts)
@@ -82,29 +83,41 @@ class Other : AppCompatActivity() {
         })
 
         // 資料庫抓簡介
-        val userRef = Firebase.database.reference.child("users").child(userId.toString())
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot)
-            {
-                val promsgs = dataSnapshot.children.mapNotNull { it.getValue(User::class.java) }
-                promsgs.forEach{user ->
-                    msg = findViewById(R.id.MSG)
-                    msg.text = user.promsg.toString()
-                }
+//        val userRef = Firebase.database.reference.child("users").child(userId.toString())
+//        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot)
+//            {
+//                val promsgs = dataSnapshot.children.mapNotNull { it.getValue(User::class.java) }
+//                promsgs.forEach{user ->
+//                    msg = findViewById(R.id.MSG)
+//                    msg.text = user.promsg.toString()
+//                }
+//
+//            }
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                // 处理错误
+//            }
+//        })
+        database.child("users").child(otherUserID.toString()).get().addOnSuccessListener {
+            Log.i("firebase", "Got value ${it.value}")
+            val dataSnapshotMap = it.value as Map<String, Any>
+            msg = findViewById(R.id.MSG)
+            msg.text = dataSnapshotMap["promsg"] as String
+            otherUsername = findViewById(R.id.OtherUser)
+            otherUsername.text = dataSnapshotMap["username"] as String
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+//        val followButton: Button = findViewById(R.id.followButton)
+//        followButton.setOnClickListener {
+//
+//        }
 
-            }
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 处理错误
-            }
-        })
-
-        OtherUsername = findViewById(R.id.OtherUser)
-        OtherUsername.text = name
 
         val profileButton: Button = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
 
-            val intent = Intent(this, Profile::class.java)
+            val intent = Intent(this, Personal::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
         val mapButton: Button = findViewById(R.id.map)

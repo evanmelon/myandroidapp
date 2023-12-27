@@ -2,15 +2,14 @@ package com.example.myapplication
 
 import android.content.Context
 import android.graphics.Typeface
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import com.example.myapplication.models.Post
 import com.example.myapplication.models.User
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -36,13 +35,22 @@ class FavoriteList : AppCompatActivity() {
         userId = sharedPref.getString("USER_ID", null)
         placesClient = Places.createClient(this)
 
-
         val container = findViewById<LinearLayout>(R.id.LikeContainer)
         val userPostsRef = database.child("users").child(userId.toString())
         userPostsRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val user = dataSnapshot.getValue(User::class.java)
-
+//                user?.let {
+//                    Log.d("UserInfo", "User details: $it")
+//                }
+//                val likePlaceInfos = user?.likePlaceInfos
+//                val placeIds: List<String?> = likePlaceInfos?.map { it.placeId } ?: emptyList()
+//                likePlaceInfos?.forEach { placeInfo ->
+//                    Log.d("likePlaceInfos", "Place ID: ${placeInfo.placeId}, Rating: ${placeInfo.rating}, Notes: ${placeInfo.notes}")
+//                }
+//                placeIds.forEach { placeId ->
+//                    Log.d("placeIds", "Place ID: $placeId")
+//                }
                 val placeIds = user?.likePlaceIds?.toList()
                 val placeFields = listOf(Place.Field.ID, Place.Field.NAME)
 
