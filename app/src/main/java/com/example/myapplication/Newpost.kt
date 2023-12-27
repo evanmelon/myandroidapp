@@ -14,7 +14,6 @@ class Newpost : AppCompatActivity() {
     private lateinit var Title : EditText
     private lateinit var Content: EditText
     private lateinit var addpostButton: Button
-    private lateinit var addrestaurant: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_newpost)
@@ -23,20 +22,6 @@ class Newpost : AppCompatActivity() {
         readWriteSnippets = ReadAndWriteSnippets()
         readWriteSnippets.initializeDbRef()
 
-        addrestaurant = findViewById(R.id.addrestaurant)
-        addrestaurant.setOnClickListener {
-            val editText = EditText(this)
-            val dialog = AlertDialog.Builder(this)
-                .setTitle("輸入餐廳")
-                .setView(editText)
-                .setPositiveButton("確定") { _, _ ->
-                    val userInput = editText.text.toString()
-
-                }
-                .setNegativeButton("取消", null)
-                .create()
-            dialog.show()
-        }
     }
     private fun byId() {
         Title = findViewById(R.id.Title)
