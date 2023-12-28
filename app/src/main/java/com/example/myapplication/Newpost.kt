@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.models.User
@@ -32,6 +34,8 @@ class Newpost : AppCompatActivity() {
     private lateinit var addrestaurant: Button
     private lateinit var placesClient: PlacesClient
     private lateinit var sharedPref: android.content.SharedPreferences
+    private lateinit var restaurantContent: TextView
+    private lateinit var placeId: String
     private var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +49,7 @@ class Newpost : AppCompatActivity() {
         readWriteSnippets = ReadAndWriteSnippets()
         readWriteSnippets.initializeDbRef()
         placesClient = Places.createClient(this)
+        restaurantContent = findViewById(R.id.restaurantContent)
         addrestaurant = findViewById(R.id.addRestaurant)
         addrestaurant.setOnClickListener {
             val userPostsRef = database.child("users").child(userId.toString())
@@ -52,9 +57,9 @@ class Newpost : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val user = dataSnapshot.getValue(User::class.java)
 //                    val options = user?.likePlaceIds?.toTypedArray()
-//                    val likePlaceInfos = user?.likePlaceInfos?.toList()
-//                    val placeIds: List<String?> = likePlaceInfos?.map { it.placeId } ?: emptyList()
-                    val placeIds = user?.likePlaceIds?.toList()
+                    val likePlaceInfos = user?.likePlaceInfos?.toList()
+                    val placeIds: List<String?> = likePlaceInfos?.map { it.placeId } ?: emptyList()
+//                    val placeIds = user?.likePlaceIds?.toList()
                     val placeFields = listOf(Place.Field.ID, Place.Field.NAME)
                     val options = mutableListOf<String>()
                     if (placeIds != null) {
@@ -92,11 +97,15 @@ class Newpost : AppCompatActivity() {
         builder.setTitle("Select a place")
             .setItems(options.toTypedArray()) { _, which ->
                 // 对话框的点击事件处理
+                placeId = placeIds[which].toString()
                 val request = FetchPlaceRequest.newInstance(placeIds[which], placeFields)
                 placesClient.fetchPlace(request)
                     .addOnSuccessListener { response: FetchPlaceResponse ->
                         val place = response.place
                         Log.i("place", "Place select: ${place.name}")
+                        // 设置 TextView 的文本并使其可见
+                        restaurantContent.text = place.name
+                        restaurantContent.visibility = View.VISIBLE
                     }
                     .addOnFailureListener { exception: Exception ->
                         if (exception is ApiException) {
@@ -123,7 +132,7 @@ class Newpost : AppCompatActivity() {
             val Tstr = Title.text.toString()    // 拿取 Title 字串
             val Cstr = Content.text.toString()  // 拿取 Content 字串
             // 更新資料庫
-            readWriteSnippets.writeNewPost(userId = userId.toString(), username = name.toString(), title = Tstr, body = Cstr)
+            readWriteSnippets.writeNewPost(userId = userId.toString(), username = name.toString(), title = Tstr, body = Cstr, placeID = placeId)
 //            data.userdata?.writeNewPost(userId = userId.toString(), username = name.toString(), title = Tstr, body = Cstr)
 //            Post(userId.toString(), name.toString(), Tstr, Cstr)
             // 回到個人頁面

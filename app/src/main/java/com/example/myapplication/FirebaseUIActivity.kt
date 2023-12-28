@@ -38,6 +38,7 @@ class FirebaseUIActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_firebase_ui)
+        supportActionBar?.hide()
 //        createSignInIntent() //登入的按鈕需要做的
 
 //        val buttonLogin: Button = findViewById(R.id.buttonLogin)
@@ -138,16 +139,17 @@ class FirebaseUIActivity : AppCompatActivity(){
         // Choose authentication providers
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.PhoneBuilder().build(),
+//            AuthUI.IdpConfig.PhoneBuilder().build(),
 //            AuthUI.IdpConfig.GoogleBuilder().build(),
 //            AuthUI.IdpConfig.FacebookBuilder().build(),
-            AuthUI.IdpConfig.TwitterBuilder().build(),
+//            AuthUI.IdpConfig.TwitterBuilder().build(),
         )
 
         // Create and launch sign-in intent
         val signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
+            .setTheme(R.style.AppTheme_NoActionBar)
             .build()
         signInLauncher.launch(signInIntent)
         // [END auth_fui_create_intent]

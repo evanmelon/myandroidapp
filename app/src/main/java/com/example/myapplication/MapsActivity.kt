@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.myapplication.models.PlaceInfo
 import com.example.myapplication.models.User
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -106,7 +107,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
 
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_maps)
-
+        supportActionBar?.hide()
         // [START_EXCLUDE silent]
         // Construct a PlacesClient
         Places.initialize(applicationContext, "AIzaSyDGLzfM68E4GuGew5K2MXu04CPXa3afaUI")
@@ -676,12 +677,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
                     user?.let {
                         // 更新 placeIds 列表
 
-                        val updatedPlaceIds = it.likePlaceIds?.toMutableList() ?: mutableListOf()
-                        updatedPlaceIds.add(markerData.id.toString())
-//                        val updatedPlaceInfos = it.likePlaceInfos?.toMutableList() ?: mutableListOf<PlaceInfo>()
-//                        updatedPlaceInfos.add(PlaceInfo(markerData.id.toString(), null, null))
+//                        val updatedPlaceIds = it.likePlaceIds?.toMutableList() ?: mutableListOf()
+//                        updatedPlaceIds.add(markerData.id.toString())
+                        val updatedPlaceInfos = it.likePlaceInfos?.toMutableList() ?: mutableListOf()
+                        updatedPlaceInfos.add(PlaceInfo(markerData.id.toString(), -1.0, "", ""))
                         // 将更新后的对象写回数据库
-                        userRef.updateChildren(mapOf("likePlaceIds" to updatedPlaceIds))
+                        userRef.updateChildren(mapOf("likePlaceInfos" to updatedPlaceInfos))
                     }
                 }
 
@@ -739,14 +740,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
                     val user = dataSnapshot.getValue(User::class.java)
                     user?.let {
                         // 更新 placeIds 列表
-//                        val updatedPlaceInfos = it.likePlaceInfos?.toMutableList() ?: mutableListOf<PlaceInfo>()
-//                        updatedPlaceInfos.add(PlaceInfo(markerData?.id.toString(), null, null))
+                        val updatedPlaceInfos = it.likePlaceInfos?.toMutableList() ?: mutableListOf()
+                        updatedPlaceInfos.add(PlaceInfo(markerData?.id.toString(), -1.0, "", ""))
 
-                        val updatedPlaceIds = it.likePlaceIds?.toMutableList() ?: mutableListOf()
-                        updatedPlaceIds.add(markerData?.id.toString())
+//                        val updatedPlaceIds = it.likePlaceIds?.toMutableList() ?: mutableListOf()
+//                        updatedPlaceIds.add(markerData?.id.toString())
 
                         // 将更新后的对象写回数据库
-                        userRef.updateChildren(mapOf("likePlaceIds" to updatedPlaceIds))
+                        userRef.updateChildren(mapOf("likePlaceInfos" to updatedPlaceInfos))
                     }
                 }
 

@@ -8,6 +8,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 data class Post(
     var uid: String? = "",
     var author: String? = "",
+    var placeID: String? = "",
     var title: String? = "",
     var body: String? = "",
     var starCount: Int = 0,
@@ -20,6 +21,7 @@ data class Post(
         return mapOf(
             "uid" to uid,
             "author" to author,
+            "placeID" to placeID,
             "title" to title,
             "body" to body,
             "starCount" to starCount,

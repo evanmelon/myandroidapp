@@ -15,6 +15,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.myapplication.models.Post
+import com.google.android.gms.common.api.ApiException
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FetchPlaceResponse
+import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -31,6 +37,7 @@ class Personal: AppCompatActivity() {
     private lateinit var msg: TextView
     private lateinit var readWriteSnippets: ReadAndWriteSnippets
     private lateinit var sharedPref: android.content.SharedPreferences
+    private lateinit var placesClient: PlacesClient
     private var userId: String? = null
     private var email: String? = null
     private var name: String? = null
@@ -40,6 +47,8 @@ class Personal: AppCompatActivity() {
         database = Firebase.database.reference
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal)
+        supportActionBar?.hide()
+        placesClient = Places.createClient(this)
         sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
         userId = sharedPref.getString("USER_ID", null)
         email = sharedPref.getString("EMAIL", null)
@@ -68,18 +77,33 @@ class Personal: AppCompatActivity() {
 
                     cardView.layoutParams = layoutParams
                     cardView.cardElevation = 5f
+                    val placeFields = listOf(Place.Field.ID, Place.Field.NAME)
+                    val request = FetchPlaceRequest.newInstance(post.placeID, placeFields)
+                    var placeName: String? = null
+                    placesClient.fetchPlace(request)
+                        .addOnSuccessListener { response: FetchPlaceResponse ->
+                            val place = response.place
+                            Log.i("place", "Place select: ${place.name}")
+                            placeName = place.name.toString()
+                            val textView = TextView(this@Personal)
+                            val text = "Restaurant: ${placeName}\nTitle: ${post.title}\nBody: ${post.body}"
+                            textView.text = text
+                            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                            textView.setPadding(16, 16, 16, 16)
 
-                    val textView = TextView(this@Personal)
-                    val text = "Title: ${post.title}\nBody: ${post.body}"
-                    textView.text = text
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-                    textView.setPadding(16, 16, 16, 16)
+                            // 将TextView添加到CardView中
+                            cardView.addView(textView)
 
-                    // 将TextView添加到CardView中
-                    cardView.addView(textView)
+                            // 将CardView添加到容器中
+                            container.addView(cardView)
+                        }
+                        .addOnFailureListener { exception: Exception ->
+                            if (exception is ApiException) {
+                                Log.e("place", "Place not found: ${exception.message}")
+                                // 处理错误
+                            }
+                        }
 
-                    // 将CardView添加到容器中
-                    container.addView(cardView)
                 }
             }
             override fun onCancelled(databaseError: DatabaseError) {

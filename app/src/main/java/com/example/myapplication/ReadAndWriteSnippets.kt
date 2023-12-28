@@ -71,7 +71,7 @@ class ReadAndWriteSnippets {
     }
 
     // [START write_fan_out]
-    fun writeNewPost(userId: String, username: String, title: String, body: String) {
+    fun writeNewPost(userId: String, username: String, title: String, body: String, placeID: String) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         val key = database.child("posts").push().key
@@ -80,7 +80,7 @@ class ReadAndWriteSnippets {
             return
         }
 
-        val post = Post(userId, username, title, body)
+        val post = Post(uid = userId, author = username, title = title, body = body, placeID = placeID)
         val postValues = post.toMap()
 
         val childUpdates = hashMapOf<String, Any>(
