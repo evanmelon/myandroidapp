@@ -133,7 +133,7 @@
             android:layout_marginRight="20dp"
             android:textSize="12dp"
             android:textColor="#808080"
-            android:background="@drawable/point"
+            android:background="@drawable/like"
             >
         </ImageButton>
 

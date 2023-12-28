@@ -41,7 +41,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.OpeningHours
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.Place.BooleanPlaceAttributeValue
 import com.google.android.libraries.places.api.model.RectangularBounds
@@ -584,12 +583,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
                                         id = place.id,
                                         name = place.name,
                                         address = place.address,
-                                        current_opening_hours = place.currentOpeningHours,
-                                        serves_vegentarian_food = place.servesVegetarianFood,
                                         editorial_summary = place.editorialSummary,
                                         ratting = place.rating,
                                         price_level = place.priceLevel,
-                                        phone_number = place.phoneNumber
+                                        phone_number = place.phoneNumber,
+                                        vagetarian = place.servesVegetarianFood
                                         )
                                     val spot = map?.addMarker(
                                         MarkerOptions()
@@ -642,17 +640,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         val tvRating: TextView = dialogView.findViewById(R.id.tvRating)
         val tvPrice: TextView = dialogView.findViewById(R.id.tvPrice)
         val tvDescription: TextView = dialogView.findViewById(R.id.tvDescription)
+        val tvVa: TextView = dialogView.findViewById(R.id.tvVa)
         val likebutton: Button = dialogView.findViewById(R.id.like)
+
         val markerData = MarkerData(
             id = selectedPlace.id,
             name = selectedPlace.name,
             address = selectedPlace.address,
-            current_opening_hours = selectedPlace.currentOpeningHours,
-            serves_vegentarian_food = selectedPlace.servesVegetarianFood,
             editorial_summary = selectedPlace.editorialSummary,
             ratting = selectedPlace.rating,
             price_level = selectedPlace.priceLevel,
-            phone_number = selectedPlace.phoneNumber
+            phone_number = selectedPlace.phoneNumber,
+            vagetarian = selectedPlace.servesVegetarianFood
         )
 
         // 现在可以使用 markerData 中的信息了
@@ -662,7 +661,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         tvRating.text = markerData?.ratting.toString()
         tvPrice.text = markerData?.price_level.toString()
         tvDescription.text = markerData?.editorial_summary
-
+        tvVa.text = markerData?.vagetarian.toString()
 
         dialog.show()
 
@@ -700,12 +699,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         val id: String?,
         val name: String?,
         val address: String?,
-        val current_opening_hours: OpeningHours?,
-        val serves_vegentarian_food: BooleanPlaceAttributeValue?,
         val editorial_summary: String?,
         val ratting: Double?,
         val price_level: Int?,
-        val phone_number: String?
+        val phone_number: String?,
+        val vagetarian: BooleanPlaceAttributeValue?
         )
     override fun onInfoWindowClick(marker: Marker) {
         val dialogView = layoutInflater.inflate(R.layout.button_sheet, null)
@@ -719,6 +717,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         val tvDescription: TextView = dialogView.findViewById(R.id.tvDescription)
         val markerData = marker.tag as? MarkerData
         val likebutton: Button = dialogView.findViewById(R.id.like)
+        val tvVa: TextView = dialogView.findViewById(R.id.tvVa)
+
 
         // 现在可以使用 markerData 中的信息了
         tvStoreName.text = markerData?.name
@@ -727,6 +727,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWi
         tvRating.text = markerData?.ratting.toString()
         tvPrice.text = markerData?.price_level.toString()
         tvDescription.text = markerData?.editorial_summary
+        tvVa.text = markerData?.vagetarian.toString()
 
 
         dialog.show()
